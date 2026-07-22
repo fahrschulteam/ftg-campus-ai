@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI-Newsletter-Generator · Fahrschulteam</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f0f2f5;color:#1a1a1a;min-height:100vh;padding:2rem 1rem}
+.wrap{max-width:700px;margin:0 auto}
+.page-header{display:flex;align-items:center;gap:16px;margin-bottom:1.5rem}
+.page-header img{height:40px}
+.page-header-text h1{font-size:18px;font-weight:600;color:#1a1a1a}
+.page-header-text p{font-size:12px;color:#888}
+.main-tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:2px solid #e0e0e0}
+.main-tab{padding:12px 24px;font-size:14px;font-weight:600;border:none;background:none;color:#888;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.main-tab:hover{color:#CC2229}
+.main-tab.active{color:#CC2229;border-bottom-color:#CC2229}
+.card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.step{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#888;display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:600}
+.step-num{width:18px;height:18px;border-radius:50%;background:#CC2229;color:#fff;font-size:10px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.zg-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.zg-btn{text-align:left;padding:10px 12px;border-radius:8px;border:1px solid #ddd;background:#fafafa;cursor:pointer;width:100%;transition:all .15s}
+.zg-btn:hover{border-color:#CC2229;background:#fdf0f0}
+.zg-btn.sel{border:2px solid #CC2229;background:#fdf0f0}
+.zg-name{font-size:13px;font-weight:500;color:#1a1a1a}
+.zg-btn.sel .zg-name{color:#9b1a1f}
+.zg-desc{font-size:11px;color:#888;margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{font-size:12px;padding:6px 13px;border-radius:20px;border:1px solid #ddd;background:#fafafa;color:#555;cursor:pointer;transition:all .15s;user-select:none}
+.chip:hover{border-color:#CC2229;color:#9b1a1f;background:#fdf0f0}
+.chip.sel{border:2px solid #CC2229;background:#fdf0f0;color:#9b1a1f;font-weight:500}
+.row{display:flex;gap:8px}
+.inp{font-size:13px;padding:7px 10px;border:1px solid #ddd;border-radius:6px;outline:none;transition:border .15s}
+.inp:focus{border-color:#CC2229}
+.tone-grid{display:flex;gap:8px}
+.tone-btn{flex:1;padding:9px 10px;border-radius:8px;border:1px solid #ddd;background:#fafafa;cursor:pointer;text-align:center;transition:all .15s}
+.tone-btn:hover{border-color:#CC2229;background:#fdf0f0}
+.tone-btn.sel{border:2px solid #CC2229;background:#fdf0f0}
+.tone-name{font-size:13px;font-weight:500;color:#1a1a1a}
+.tone-btn.sel .tone-name{color:#9b1a1f}
+.tone-desc{font-size:11px;color:#888;margin-top:2px}
+.gen-btn{width:100%;padding:12px 0;font-size:14px;font-weight:600;border-radius:8px;border:none;cursor:pointer;margin-top:8px;background:#CC2229;color:#fff;transition:all .15s}
+.gen-btn:hover{background:#a81b21}
+.gen-btn:disabled{background:#e8e8e8;color:#aaa;cursor:default}
+.warn{font-size:12px;color:#b45309;background:#fef9c3;padding:7px 12px;border-radius:6px;margin-top:8px;display:none}
+.err{font-size:12px;color:#c62828;margin-top:8px;display:none;padding:7px 12px;background:#fef2f2;border-radius:6px}
+#result-box{display:none;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;margin-bottom:1rem}
+.tab-bar{display:flex;align-items:center;border-bottom:1px solid #e0e0e0;padding:0 1rem;background:#fafafa;gap:4px}
+.tab{padding:10px 14px;font-size:13px;border:none;background:none;color:#666;border-bottom:2px solid transparent;cursor:pointer}
+.tab.active{color:#CC2229;border-bottom:2px solid #CC2229;font-weight:500}
+.tab-spacer{flex:1}
+.copy-btn{font-size:12px;padding:5px 12px;border-radius:6px;border:1px solid #ddd;background:#fff;color:#555;cursor:pointer;display:flex;align-items:center;gap:5px}
+.copy-btn.accent{border-color:#CC2229;color:#CC2229}
+#tab-preview{padding:1.25rem}
+#tab-html{padding:1rem;display:none}
+.meta-pill{margin-bottom:.6rem;padding:8px 14px;background:#fafafa;border-radius:8px;font-size:13px;border:1px solid #eee}
+.meta-lbl{color:#888;margin-right:8px;font-size:12px}
+.art-item{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid #eee}
+.art-item:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
+.art-tag{display:inline-block;background:#fdf0f0;color:#9b1a1f;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;margin-bottom:6px}
+.art-h{font-size:14px;font-weight:600;margin-bottom:6px;line-height:1.4}
+.art-p{font-size:13px;color:#555;line-height:1.65}
+.tip-box{background:#fdf8f8;border-left:4px solid #CC2229;border-radius:0 8px 8px 0;padding:12px 16px;margin-top:1rem}
+.tip-lbl{font-size:10px;color:#CC2229;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;font-weight:600}
+.tip-h{font-size:13px;font-weight:600;margin-bottom:5px}
+.tip-p{font-size:13px;color:#555;line-height:1.65}
+.code-wrap{background:#f6f8fa;border-radius:8px;padding:1rem;overflow:auto;max-height:380px;margin-bottom:.75rem;border:1px solid #eee}
+.code-wrap pre{font-size:11px;color:#333;line-height:1.6;white-space:pre-wrap;word-break:break-all;margin:0;font-family:monospace}
+.hint{padding:10px 14px;background:#e8f5e9;border-radius:8px;font-size:12px;color:#2e7d32;line-height:1.6}
+.gap{margin-bottom:1.25rem}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="page-header">
+    <img src="/logo.png" alt="Fahrschulteam">
+    <div class="page-header-text">
+      <h1>KI-Newsletter-Generator</h1>
+      <p>Güterverkehr aktuell &nbsp;·&nbsp; Rapidmail-kompatibler HTML-Export</p>
+    </div>
+  </div>
+
+  <div class="main-tabs">
+    <button class="main-tab active" id="maintab-newsletter">📰 Newsletter</button>
+    <button class="main-tab" id="maintab-lehrgang">🎓 Lehrgangsankündigung</button>
+    <button class="main-tab" id="maintab-frei">✉️ Freie Mitteilung</button>
+  </div>
+
+  <div id="view-newsletter">
+  <div class="card">
+    <div class="gap">
+      <div class="step"><span class="step-num">1</span> Ausgabe</div>
+      <input class="inp" id="ausgabe" value="07/2026" style="width:130px">
+    </div>
+    <div class="gap">
+      <div class="step">Header-Bild <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;font-size:11px">(optional)</span></div>
+      <input type="file" id="nl-header-bild" accept="image/jpeg,image/png,image/webp" style="font-size:12px;width:100%">
+      <div id="nl-header-preview" style="margin-top:8px;display:none">
+        <img id="nl-header-img" style="max-width:100%;border-radius:8px;border:1px solid #eee">
+        <button id="nl-header-remove" style="display:block;margin-top:4px;font-size:11px;color:#c62828;background:none;border:none;cursor:pointer">✕ Bild entfernen</button>
+      </div>
+      <p style="font-size:11px;color:#aaa;margin-top:6px">Großes Aufmacher-Bild oben im Newsletter.</p>
+    </div>
+    <div class="gap">
+      <div class="step"><span class="step-num">2</span> Zielgruppe wählen</div>
+      <div class="zg-grid" id="zg-grid"></div>
+    </div>
+    <div class="gap" id="themen-block" style="display:none">
+      <div class="step"><span class="step-num">3</span> Themen wählen <span id="themen-count" style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;font-size:11px"></span></div>
+      <div class="chips" id="chips"></div>
+      <div class="row">
+        <input class="inp" id="custom-inp" placeholder="Eigenes Thema eingeben..." style="flex:1">
+        <button id="add-btn" style="padding:7px 16px;font-size:16px;border:1px solid #ddd;border-radius:6px;background:#fafafa;cursor:pointer">+</button>
+      </div>
+    </div>
+    <div class="gap" id="hinweise-block" style="display:none">
+      <div class="step"><span class="step-num">4</span> Eigene Hinweise <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;font-size:11px">(optional)</span></div>
+      <div class="chips" id="hinweis-chips"></div>
+      <div class="row">
+        <input class="inp" id="hinweis-inp" placeholder="z.B. BKF-Lehrgang August, Website fahrschulteam.info..." style="flex:1">
+        <button id="hinweis-add-btn" style="padding:7px 16px;font-size:16px;border:1px solid #ddd;border-radius:6px;background:#fafafa;cursor:pointer">+</button>
+      </div>
+      <p style="font-size:11px;color:#aaa;margin-top:6px">Diese Hinweise werden natürlich in den Newsletter-Text eingearbeitet.</p>
+    </div>
+
+    <div class="gap" id="schulung-block" style="display:none">
+      <div class="step"><span class="step-num">5</span> Schulungsankündigung <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#888;font-size:11px">(optional)</span></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:12px;cursor:pointer">
+        <input type="checkbox" id="schulung-toggle" style="width:16px;height:16px;accent-color:#CC2229">
+        Schulung in Newsletter einbauen
+      </label>
+      <div id="schulung-form" style="display:none;background:#fafafa;border:1px solid #eee;border-radius:8px;padding:1rem">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Schulungstitel *</label>
+            <input class="inp" id="sch-titel" placeholder="z.B. BKF-Grundqualifikation Modul 3" style="width:100%">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Anmelde-Link</label>
+            <input class="inp" id="sch-link" placeholder="z.B. fahrschulteam.info/anmeldung" style="width:100%">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Datum</label>
+            <input class="inp" id="sch-datum" placeholder="z.B. 12. August 2026" style="width:100%">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Uhrzeit</label>
+            <input class="inp" id="sch-zeit" placeholder="z.B. 08:00 – 16:30 Uhr" style="width:100%">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Ort</label>
+            <input class="inp" id="sch-ort" placeholder="z.B. Rheiner Str. 158, Lingen" style="width:100%">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Parkplatz</label>
+            <input class="inp" id="sch-park" placeholder="z.B. Kostenlos direkt vor Ort" style="width:100%">
+          </div>
+          <div style="grid-column:1/-1">
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Verpflegung</label>
+            <input class="inp" id="sch-verpflegung" placeholder="z.B. Kaffee & Mittagessen inklusive" style="width:100%">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Flyer-Bild (optional, JPG/PNG)</label>
+          <input type="file" id="sch-flyer" accept="image/jpeg,image/png,image/gif,image/webp" style="font-size:12px;width:100%">
+          <div id="flyer-preview" style="margin-top:8px;display:none">
+            <img id="flyer-img" style="max-width:100%;max-height:200px;border-radius:6px;border:1px solid #eee">
+            <button id="flyer-remove" style="display:block;margin-top:4px;font-size:11px;color:#c62828;background:none;border:none;cursor:pointer">✕ Flyer entfernen</button>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Anmeldebogen / PDF (optional)</label>
+          <input type="file" id="sch-pdf" accept="application/pdf" style="font-size:12px;width:100%">
+          <div id="pdf-status" style="margin-top:6px;font-size:12px;display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap" id="tone-block" style="display:none">
+      <div class="step"><span class="step-num">6</span> Ton</div>
+      <div class="tone-grid" id="tone-grid"></div>
+    </div>
+    <div id="warn-msg" class="warn"></div>
+    <button class="gen-btn" id="gen-btn">Newsletter generieren</button>
+    <div class="err" id="err-msg"></div>
+  </div>
+
+  <div id="result-box">
+    <div class="tab-bar">
+      <button class="tab active" id="tab-btn-prev">Vorschau</button>
+      <button class="tab" id="tab-btn-html">HTML-Code</button>
+      <div class="tab-spacer"></div>
+      <button class="copy-btn" id="btn-copy-subj" style="display:none">📋 <span id="lbl-subj">Betreff</span></button>
+      <button class="copy-btn accent" id="btn-copy-html" style="display:none">📋 <span id="lbl-html">HTML für Rapidmail</span></button>
+    </div>
+    <div id="tab-preview">
+      <div class="meta-pill" id="out-subject"></div>
+      <div class="meta-pill" id="out-preheader" style="font-size:12px;color:#666"></div>
+      <div id="out-header-img" style="display:none;margin-bottom:1rem"></div>
+      <div id="out-articles"></div>
+      <div class="tip-box" id="out-tip"></div>
+      <div id="out-promo" style="display:none;margin-top:1rem;padding:14px 16px;background:#f5f5f5;border-left:4px solid #333;border-radius:0 8px 8px 0"></div>
+      <div id="out-schulung" style="display:none;margin-top:1rem"></div>
+    </div>
+    <div id="tab-html">
+      <div class="code-wrap"><pre id="out-code"></pre></div>
+      <div class="hint">✅ <strong>Rapidmail-Import:</strong> Neuer Newsletter → Design → „Eigener HTML-Code" → einfügen. Betreff separat eintragen. Abmeldelink über <code style="background:#d4edda;padding:1px 4px;border-radius:3px">{{unsubscribe}}</code> wird automatisch gesetzt.</div>
+    </div>
+  </div>
+
+  <!-- VERSAND -->
+  <div id="versand-box" style="display:none;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;margin-bottom:1rem">
+    <div style="padding:1rem 1.25rem;border-bottom:1px solid #eee;background:#fafafa">
+      <div style="font-size:14px;font-weight:600">✉ Versand</div>
+    </div>
+    <div style="padding:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+
+      <!-- Test-Versand -->
+      <div style="border:1px solid #eee;border-radius:8px;padding:1rem">
+        <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:10px">Einzelversand</div>
+        <input class="inp" id="test-email" type="email" placeholder="deine@email.de" style="width:100%;margin-bottom:8px">
+        <button id="btn-test-send" style="width:100%;padding:8px;font-size:13px;font-weight:500;background:#444;color:#fff;border:none;border-radius:6px;cursor:pointer">E-Mail senden</button>
+        <div id="test-send-status" style="font-size:12px;margin-top:6px;display:none"></div>
+      </div>
+
+      <!-- Massen-Versand -->
+      <div style="border:1px solid #eee;border-radius:8px;padding:1rem">
+        <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:10px">Massen-Versand (Rapidmail)</div>
+        <select id="rapidmail-list" class="inp" style="width:100%;margin-bottom:8px">
+          <option value="">Empfängerlisten laden...</option>
+        </select>
+        <button id="btn-load-lists" style="width:100%;padding:8px;font-size:12px;background:#f0f0f0;color:#444;border:1px solid #ddd;border-radius:6px;cursor:pointer;margin-bottom:8px">🔄 Listen abrufen</button>
+        <button id="btn-mass-send" style="width:100%;padding:8px;font-size:13px;font-weight:500;background:#CC2229;color:#fff;border:none;border-radius:6px;cursor:pointer">An Liste senden</button>
+        <div id="mass-send-status" style="font-size:12px;margin-top:6px;display:none"></div>
+      </div>
+
+    </div>
+    <div style="padding:0 1.25rem 1rem;font-size:11px;color:#aaa">
+      Benötigt: <strong>BREVO_API_KEY</strong>, <strong>BREVO_SENDER_EMAIL</strong> als Netlify-Umgebungsvariablen.
+    </div>
+  </div>
+  </div><!-- /view-newsletter -->
+
+  <!-- ============ LEHRGANGSANKÜNDIGUNG ============ -->
+  <div id="view-lehrgang" style="display:none">
+    <div class="card">
+      <div class="gap">
+        <div class="step"><span class="step-num">1</span> Lehrgang auswählen</div>
+        <div class="zg-grid" id="lg-kurs-grid"></div>
+        <div class="row" style="margin-top:8px">
+          <input class="inp" id="lg-kurs-neu" placeholder="Neuen Kurstyp anlegen..." style="flex:1">
+          <button id="lg-kurs-add" style="padding:7px 16px;font-size:16px;border:1px solid #ddd;border-radius:6px;background:#fafafa;cursor:pointer">+</button>
+        </div>
+        <button id="lg-kurs-reset" style="margin-top:8px;font-size:11px;color:#888;background:none;border:none;cursor:pointer;text-decoration:underline">↺ Kursliste auf Standard zurücksetzen</button>
+      </div>
+
+      <div id="lg-form" style="display:none">
+        <div class="gap">
+          <div class="step"><span class="step-num">2</span> Kursbild (Header)</div>
+          <input type="file" id="lg-bild" accept="image/jpeg,image/png,image/webp" style="font-size:12px;width:100%">
+          <div id="lg-bild-preview" style="margin-top:8px;display:none">
+            <img id="lg-bild-img" style="max-width:100%;border-radius:8px;border:1px solid #eee">
+            <button id="lg-bild-remove" style="display:block;margin-top:4px;font-size:11px;color:#c62828;background:none;border:none;cursor:pointer">✕ Bild entfernen</button>
+          </div>
+          <p style="font-size:11px;color:#aaa;margin-top:6px">Das Bild wird pro Kurstyp gespeichert und bleibt jederzeit austauschbar.</p>
+        </div>
+
+        <div class="gap">
+          <div class="step"><span class="step-num">3</span> Einladungstext</div>
+          <textarea class="inp" id="lg-text" rows="4" style="width:100%;resize:vertical;font-family:inherit" placeholder="Einladungstext für diesen Kurs..."></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button id="lg-ki-btn" style="font-size:12px;padding:7px 14px;background:#CC2229;color:#fff;border:none;border-radius:6px;cursor:pointer">✨ KI umformulieren (partnerschaftlich)</button>
+            <button id="lg-text-save" style="font-size:12px;padding:7px 14px;background:#f0f0f0;color:#444;border:1px solid #ddd;border-radius:6px;cursor:pointer">💾 Als Standard speichern</button>
+          </div>
+          <div id="lg-ki-status" style="font-size:11px;margin-top:6px;display:none"></div>
+        </div>
+
+        <div class="gap">
+          <div class="step"><span class="step-num">4</span> Termine</div>
+          <div id="lg-termine"></div>
+          <button id="lg-termin-add" style="font-size:12px;padding:7px 14px;background:#f0f0f0;color:#444;border:1px solid #ddd;border-radius:6px;cursor:pointer;margin-top:8px">+ Termin hinzufügen</button>
+          <p style="font-size:11px;color:#aaa;margin-top:6px">Mehrere Termine möglich — z.B. für mehrtägige ADR-Kurse.</p>
+        </div>
+
+        <div class="gap">
+          <div class="step"><span class="step-num">5</span> Infos</div>
+          <div style="margin-bottom:12px">
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Ort</label>
+            <input class="inp" id="lg-ort" placeholder="Rheiner Str. 158, Lingen" style="width:100%">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:6px">Verpflegung <span style="color:#aaa">(Mehrfachauswahl)</span></label>
+            <div class="chips" id="lg-verpflegung-chips"></div>
+            <div class="row" style="margin-top:6px">
+              <input class="inp" id="lg-verpflegung-custom" placeholder="Eigenes hinzufügen..." style="flex:1">
+              <button id="lg-verpflegung-add" style="padding:7px 16px;font-size:16px;border:1px solid #ddd;border-radius:6px;background:#fafafa;cursor:pointer">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="gap">
+          <div class="step"><span class="step-num">6</span> Anmeldebogen (PDF)</div>
+          <input type="file" id="lg-pdf" accept="application/pdf" style="font-size:12px;width:100%">
+          <div id="lg-pdf-status" style="margin-top:6px;font-size:12px;display:none"></div>
+          <input class="inp" id="lg-link" placeholder="oder Anmelde-Link: fahrschulteam.info/anmeldung" style="width:100%;margin-top:8px">
+        </div>
+
+        <div class="gap">
+          <div class="step"><span class="step-num">7</span> Parkplatz-Grafik (optional)</div>
+          <input type="file" id="lg-park" accept="image/jpeg,image/png,image/webp" style="font-size:12px;width:100%">
+          <div id="lg-park-preview" style="margin-top:8px;display:none">
+            <img id="lg-park-img" style="max-width:100%;border-radius:8px;border:1px solid #eee">
+            <button id="lg-park-remove" style="display:block;margin-top:4px;font-size:11px;color:#c62828;background:none;border:none;cursor:pointer">✕ Entfernen</button>
+          </div>
+        </div>
+
+        <button class="gen-btn" id="lg-gen-btn">Lehrgangsankündigung erstellen</button>
+        <div class="err" id="lg-err" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- Ergebnis -->
+    <div id="lg-result-box" style="display:none;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;margin-bottom:1rem">
+      <div class="tab-bar">
+        <button class="tab active" id="lg-tab-prev">Vorschau</button>
+        <button class="tab" id="lg-tab-html">HTML-Code</button>
+        <div class="tab-spacer"></div>
+        <button class="copy-btn accent" id="lg-copy-html" style="display:none">📋 <span id="lg-lbl-html">HTML kopieren</span></button>
+      </div>
+      <div id="lg-tab-preview" style="padding:1.25rem"></div>
+      <div id="lg-tab-htmlcode" style="padding:1rem;display:none">
+        <div class="code-wrap"><pre id="lg-out-code"></pre></div>
+      </div>
+    </div>
+
+    <!-- Versand -->
+    <div id="lg-versand-box" style="display:none;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;margin-bottom:1rem">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid #eee;background:#fafafa">
+        <div style="font-size:14px;font-weight:600">✉ Versand</div>
+      </div>
+      <div style="padding:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+        <div style="border:1px solid #eee;border-radius:8px;padding:1rem">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:10px">Einzelversand</div>
+          <input class="inp" id="lg-test-email" type="email" placeholder="deine@email.de" style="width:100%;margin-bottom:8px">
+          <button id="lg-btn-test" style="width:100%;padding:8px;font-size:13px;font-weight:500;background:#444;color:#fff;border:none;border-radius:6px;cursor:pointer">E-Mail senden</button>
+          <div id="lg-test-status" style="font-size:12px;margin-top:6px;display:none"></div>
+        </div>
+        <div style="border:1px solid #eee;border-radius:8px;padding:1rem">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:10px">Massen-Versand</div>
+          <select id="lg-list" class="inp" style="width:100%;margin-bottom:8px"><option value="">Listen laden...</option></select>
+          <button id="lg-btn-loadlists" style="width:100%;padding:8px;font-size:12px;background:#f0f0f0;color:#444;border:1px solid #ddd;border-radius:6px;cursor:pointer;margin-bottom:8px">🔄 Listen abrufen</button>
+          <button id="lg-btn-mass" style="width:100%;padding:8px;font-size:13px;font-weight:500;background:#CC2229;color:#fff;border:none;border-radius:6px;cursor:pointer">An Liste senden</button>
+          <div id="lg-mass-status" style="font-size:12px;margin-top:6px;display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /view-lehrgang -->
+
+  <!-- ============ FREIE MITTEILUNG ============ -->
+  <div id="view-frei" style="display:none">
+    <div class="card">
+      <div class="gap">
+        <div class="step"><span class="step-num">1</span> Betreff</div>
+        <input class="inp" id="fr-betreff" placeholder="z.B. Frohe Weihnachten vom Fahrschulteam" style="width:100%">
+      </div>
+
+      <div class="gap">
+        <div class="step"><span class="step-num">2</span> Bild (optional)</div>
+        <input type="file" id="fr-bild" accept="image/jpeg,image/png,image/webp" style="font-size:12px;width:100%">
+        <div id="fr-bild-preview" style="margin-top:8px;display:none">
+          <img id="fr-bild-img" style="max-width:100%;border-radius:8px;border:1px solid #eee">
+          <button id="fr-bild-remove" style="display:block;margin-top:4px;font-size:11px;color:#c62828;background:none;border:none;cursor:pointer">✕ Bild entfernen</button>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="step"><span class="step-num">3</span> Überschrift</div>
+        <input class="inp" id="fr-titel" placeholder="Überschrift der Mitteilung" style="width:100%">
+      </div>
+
+      <div class="gap">
+        <div class="step"><span class="step-num">4</span> Text</div>
+        <textarea class="inp" id="fr-text" rows="6" style="width:100%;resize:vertical;font-family:inherit" placeholder="Ihr Text – die KI kann ihn anschließend professionell und partnerschaftlich umformulieren..."></textarea>
+        <div style="margin-top:8px">
+          <button id="fr-ki-btn" style="font-size:12px;padding:7px 14px;background:#CC2229;color:#fff;border:none;border-radius:6px;cursor:pointer">✨ KI umformulieren (professionell & partnerschaftlich)</button>
+        </div>
+        <div id="fr-ki-status" style="font-size:11px;margin-top:6px;display:none"></div>
+      </div>
+
+      <div class="gap">
+        <div class="step"><span class="step-num">5</span> Button (optional)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Button-Text</label>
+            <input class="inp" id="fr-btn-text" placeholder="z.B. Mehr erfahren" style="width:100%">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">Button-Link</label>
+            <input class="inp" id="fr-btn-link" placeholder="fahrschulteam.info" style="width:100%">
+          </div>
+        </div>
+      </div>
+
+      <div class="gap">
+        <div class="step"><span class="step-num">6</span> Weitere Links (optional)</div>
+        <div id="fr-links"></div>
+        <div style="display:grid;grid-template-columns:1fr 1.3fr auto;gap:8px;margin-top:4px">
+          <input class="inp" id="fr-link-text" placeholder="Beschriftung (z.B. Anmeldeformular)" style="width:100%">
+          <input class="inp" id="fr-link-url" placeholder="Link (z.B. fahrschulteam.info/anmeldung)" style="width:100%">
+          <button id="fr-link-add" style="padding:7px 16px;font-size:16px;border:1px solid #ddd;border-radius:6px;background:#fafafa;cursor:pointer">+</button>
+        </div>
+        <p style="font-size:11px;color:#aaa;margin-top:6px">Ideal statt Datei-Anhängen: verlinke z.B. Anmeldeformulare oder Dokumente.</p>
+      </div>
+
+      <button class="gen-btn" id="fr-gen-btn">Mitteilung erstellen</button>
+      <div class="err" id="fr-err" style="display:none"></div>
+    </div>
+
+    <!-- Ergebnis -->
+    <div id="fr-result-box" style="display:none;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;margin-bottom:1rem">
+      <div class="tab-bar">
+        <button class="tab active" id="fr-tab-prev">Vorschau</button>
+        <button class="tab" id="fr-tab-html">HTML-Code</button>
+        <div class="tab-spacer"></div>
+        <button class="copy-btn accent" id="fr-copy-html" style="display:none">📋 <span id="fr-lbl-html">HTML kopieren</span></button>
+      </div>
+      <div id="fr-tab-preview" style="padding:1.25rem"></div>
+      <div id="fr-tab-htmlcode" style="padding:1rem;display:none">
+        <div class="code-wrap"><pre id="fr-out-code"></pre></div>
+      </div>
+    </div>
+
+    <!-- Versand -->
+    <div id="fr-versand-box" style="display:none;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;margin-bottom:1rem">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid #eee;background:#fafafa">
+        <div style="font-size:14px;font-weight:600">✉ Versand</div>
+      </div>
+      <div style="padding:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+        <div style="border:1px solid #eee;border-radius:8px;padding:1rem">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:10px">Einzelversand</div>
+          <input class="inp" id="fr-test-email" type="email" placeholder="empfaenger@email.de" style="width:100%;margin-bottom:8px">
+          <button id="fr-btn-test" style="width:100%;padding:8px;font-size:13px;font-weight:500;background:#444;color:#fff;border:none;border-radius:6px;cursor:pointer">E-Mail senden</button>
+          <div id="fr-test-status" style="font-size:12px;margin-top:6px;display:none"></div>
+        </div>
+        <div style="border:1px solid #eee;border-radius:8px;padding:1rem">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:10px">Massen-Versand</div>
+          <select id="fr-list" class="inp" style="width:100%;margin-bottom:8px"><option value="">Listen laden...</option></select>
+          <button id="fr-btn-loadlists" style="width:100%;padding:8px;font-size:12px;background:#f0f0f0;color:#444;border:1px solid #ddd;border-radius:6px;cursor:pointer;margin-bottom:8px">🔄 Listen abrufen</button>
+          <button id="fr-btn-mass" style="width:100%;padding:8px;font-size:13px;font-weight:500;background:#CC2229;color:#fff;border:none;border-radius:6px;cursor:pointer">An Liste senden</button>
+          <div id="fr-mass-status" style="font-size:12px;margin-top:6px;display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /view-frei -->
+</div>
+
+<script>
+const LOGO_SRC = window.location.origin + "/logo.png";
+const QR_SRC   = window.location.origin + "/qr.png";
+
+const ZIELGRUPPEN = [
+  {id:"unternehmer", label:"Unternehmer",  desc:"Maut, Compliance, Fuhrpark, Kosten"},
+  {id:"fahrer",      label:"Fahrer / BKF", desc:"Lenk- und Ruhezeiten, Kontrollen"},
+  {id:"fahrlehrer",  label:"Fahrlehrer",   desc:"FeV-Änderungen, Prüfungen, Methodik"},
+  {id:"dozent",      label:"BKF-Dozent",   desc:"BKrFQG-Module, Lernziele, Recht"},
+];
+const THEMEN_MAP = {
+  unternehmer: ["LKW-Maut","Fahrermangel","Tachographenpflicht","CO2-Abgabe","Kabotage","Subunternehmer-Haftung","Bildungsgutschein","ELKW-Foerderung"],
+  fahrer:      ["Lenk-Ruhezeiten","Fahrerkarte","BAG-Kontrollen","Gesundheit-Cab","Kabotage-Regeln","Tachograph-Bedienen"],
+  fahrlehrer:  ["FeV-Aenderungen","Pruefungsaenderungen","Theoriepruefung","Praktische-Pruefung","MPU","Unterrichtsmethodik"],
+  dozent:      ["BKrFQG-Module","Neue-Lernziele","Sozialvorschriften","Ladungssicherung","Gefahrgut-ADR","Praxisaufgaben"],
+};
+const THEMEN_LABELS = {
+  unternehmer: ["LKW-Maut","Fahrermangel","Tachographenpflicht","CO₂-Abgabe","Kabotage","Subunternehmer-Haftung","Bildungsgutschein","E-LKW & Förderung"],
+  fahrer:      ["Lenk- und Ruhezeiten","Fahrerkarte","BAG-Kontrollen","Gesundheit im Cab","Kabotage-Regeln","Tachograph bedienen"],
+  fahrlehrer:  ["FeV-Änderungen","Prüfungsänderungen","Theorieprüfung","Praktische Prüfung","MPU","Unterrichtsmethodik"],
+  dozent:      ["BKrFQG Module 1–5","Neue Lernziele","Sozialvorschriften","Ladungssicherung","Gefahrgut ADR","Praxisaufgaben"],
+};
+const TONES = [
+  {id:"sachlich",    label:"Sachlich",    desc:"Informativ, neutral"},
+  {id:"motivierend", label:"Motivierend", desc:"Lösungsorientiert"},
+  {id:"warnend",     label:"Warnend",     desc:"Risiken & Bußgelder"},
+];
+
+let selZG="", selThemen=[], selHinweise=[], selTon="sachlich", resultData=null;
+let nlHeaderUrl = null;
+let nlArticleImgs = {}; // index -> url
+
+function buildEmailHTML(c, zgLabel, ausgabe, schulung) {
+  const monat = new Date().toLocaleDateString("de-DE",{month:"long",year:"numeric"});
+  const arts = c.articles.map((a,i)=>`
+    <tr><td style="padding:0 0 22px 0">
+      <div style="display:inline-block;background:#fdf0f0;color:#9b1a1f;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px;margin-bottom:8px;letter-spacing:.05em">${String(a.tag||"").toUpperCase()}</div>
+      <h2 style="font-family:Arial,sans-serif;font-size:16px;font-weight:bold;color:#1a1a1a;margin:0 0 8px;line-height:1.4">${a.title}</h2>
+      ${nlArticleImgs[i] ? `<img src="${nlArticleImgs[i]}" alt="${a.title}" style="display:block;width:100%;border-radius:8px;margin:0 0 12px;border:0">` : ""}
+      <p style="font-family:Arial,sans-serif;font-size:14px;color:#444;line-height:1.7;margin:0">${a.content}</p>
+      <hr style="border:none;border-top:1px solid #e8e8e8;margin:20px 0 0">
+    </td></tr>`).join("");
+
+  const websiteUrl = c.promo?.website ? (c.promo.website.startsWith('http') ? c.promo.website : 'https://'+c.promo.website) : '';
+  const websiteDisplay = c.promo?.website ? c.promo.website.replace(/^https?:\/\//,'') : '';
+
+  const promoBlock = c.promo ? `
+<tr><td style="padding-top:20px">
+  <hr style="border:none;border-top:1px solid #e8e8e8;margin:0 0 20px">
+  <p style="font-family:Arial,sans-serif;font-size:10px;font-weight:bold;color:#888;margin:0 0 10px;letter-spacing:.1em;text-transform:uppercase">MITTEILUNG DES HERAUSGEBERS</p>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f5f5;border-radius:8px;border-left:4px solid #333">
+  <tr><td style="padding:16px 20px">
+    <h3 style="font-family:Arial,sans-serif;font-size:15px;font-weight:bold;color:#1a1a1a;margin:0 0 10px;line-height:1.4">${c.promo.title}</h3>
+    <p style="font-family:Arial,sans-serif;font-size:13px;color:#444;line-height:1.7;margin:0 0 ${websiteUrl ? '12px':'0'}">${c.promo.content}</p>
+    ${websiteUrl ? `<p style="font-family:Arial,sans-serif;font-size:13px;font-weight:600;margin:0">
+      &#8594;&nbsp;<a href="${websiteUrl}" style="color:#CC2229;text-decoration:none">${websiteDisplay}</a>
+    </p>` : ''}
+  </td></tr>
+  </table>
+</td></tr>` : '';
+
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>${c.subject}</title></head>
+<body style="margin:0;padding:20px 0;background:#f4f4f4;font-family:Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f4">
+<tr><td align="center" style="padding:20px 10px">
+<table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%">
+
+<!-- HEADER -->
+<tr><td style="background:#fff;border-radius:12px 12px 0 0;padding:20px 32px;border-bottom:3px solid #CC2229;border-left:1px solid #e8e8e8;border-right:1px solid #e8e8e8;border-top:1px solid #e8e8e8">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td><a href="https://www.fahrschulteam.info"><img src="${LOGO_SRC}" alt="Fahrschulteam" height="38" style="display:block;border:0"></a></td>
+    <td align="right" style="font-family:Arial,sans-serif;font-size:11px;color:#888;text-align:right">
+      Güterverkehr aktuell<br>
+      <strong style="color:#1a1a1a">Ausgabe ${ausgabe}</strong><br>
+      Für ${zgLabel} &#183; ${monat}
+    </td>
+  </tr>
+  </table>
+</td></tr>
+${nlHeaderUrl ? `<tr><td style="padding:0;border-left:1px solid #e8e8e8;border-right:1px solid #e8e8e8;background:#fff"><img src="${nlHeaderUrl}" alt="Header" style="display:block;width:100%;border:0"></td></tr>` : ""}
+
+<!-- BODY -->
+<tr><td style="background:#fff;padding:28px 32px;border-left:1px solid #e8e8e8;border-right:1px solid #e8e8e8">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr><td style="padding:0 0 16px"><p style="font-family:Arial,sans-serif;font-size:13px;color:#888;margin:0">${c.preheader}</p></td></tr>
+<tr><td><hr style="border:none;border-top:1px solid #e8e8e8;margin:0 0 24px"></td></tr>
+${arts}
+<!-- TIP -->
+<tr><td>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fdf8f8;border-left:4px solid #CC2229;border-radius:0 8px 8px 0">
+<tr><td style="padding:16px 20px">
+  <p style="font-family:Arial,sans-serif;font-size:10px;font-weight:bold;color:#CC2229;margin:0 0 6px;letter-spacing:.1em;text-transform:uppercase">TIPP DES MONATS</p>
+  <h3 style="font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:#1a1a1a;margin:0 0 8px">${c.tip.title}</h3>
+  <p style="font-family:Arial,sans-serif;font-size:13px;color:#444;line-height:1.65;margin:0">${c.tip.content}</p>
+</td></tr></table>
+</td></tr>
+${promoBlock}
+${buildSchulungskarteHTML(schulung)}
+</table></td></tr>
+
+<!-- FOOTER -->
+<tr><td style="background:#f8f8f8;border:1px solid #e8e8e8;border-top:none;border-radius:0 0 12px 12px;padding:20px 32px">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td style="vertical-align:middle">
+      <p style="font-family:Arial,sans-serif;font-size:11px;color:#999;margin:0;line-height:1.8">
+        <strong style="color:#555">Fahrschulteam Lingen</strong><br>
+        Rheiner Str. 158 &nbsp;&#183;&nbsp; 49809 Lingen (Ems)<br>
+        <a href="https://www.fahrschulteam.info" style="color:#CC2229;text-decoration:none">www.fahrschulteam.info</a><br>
+        <a href="mailto:lingen@fahrschulteam.info" style="color:#CC2229;text-decoration:none">lingen@fahrschulteam.info</a><br><br>
+        Sie erhalten diese E-Mail, weil Sie unseren Newsletter abonniert haben.<br>
+        <a href="{{unsubscribe}}" style="color:#888;text-decoration:underline">Abmelden</a>
+      </p>
+    </td>
+    <td align="right" style="vertical-align:middle;padding-left:20px">
+      <a href="https://www.fahrschulteam.info"><img src="${QR_SRC}" alt="QR-Code fahrschulteam.info" width="80" height="80" style="display:block;border:0"></a>
+      <p style="font-family:Arial,sans-serif;font-size:9px;color:#aaa;text-align:center;margin:4px 0 0">fahrschulteam.info</p>
+    </td>
+  </tr>
+  </table>
+</td></tr>
+
+</table></td></tr></table></body></html>`;
+}
+
+function renderZG() {
+  const grid = document.getElementById("zg-grid");
+  grid.innerHTML = "";
+  ZIELGRUPPEN.forEach(z => {
+    const btn = document.createElement("button");
+    btn.className = "zg-btn" + (selZG===z.id ? " sel" : "");
+    btn.innerHTML = `<div class="zg-name">${z.label}</div><div class="zg-desc">${z.desc}</div>`;
+    btn.addEventListener("click", () => { selZG=z.id; selThemen=[]; selHinweise=[]; resultData=null; document.getElementById("result-box").style.display="none"; renderAll(); });
+    grid.appendChild(btn);
+  });
+}
+
+function renderTones() {
+  const grid = document.getElementById("tone-grid");
+  grid.innerHTML = "";
+  TONES.forEach(t => {
+    const btn = document.createElement("button");
+    btn.className = "tone-btn" + (selTon===t.id ? " sel" : "");
+    btn.innerHTML = `<div class="tone-name">${t.label}</div><div class="tone-desc">${t.desc}</div>`;
+    btn.addEventListener("click", () => { selTon=t.id; renderTones(); });
+    grid.appendChild(btn);
+  });
+}
+
+function renderChips() {
+  const block = document.getElementById("themen-block");
+  const toneBlock = document.getElementById("tone-block");
+  const hinweiseBlock = document.getElementById("hinweise-block");
+  const schulungBlock = document.getElementById("schulung-block");
+  if (!selZG) { block.style.display="none"; toneBlock.style.display="none"; hinweiseBlock.style.display="none"; schulungBlock.style.display="none"; return; }
+  block.style.display="block"; toneBlock.style.display="block"; hinweiseBlock.style.display="block"; schulungBlock.style.display="block";
+  // render hinweis chips
+  const hContainer = document.getElementById("hinweis-chips");
+  hContainer.innerHTML = "";
+  selHinweise.forEach(h => {
+    const chip = document.createElement("span");
+    chip.style.cssText = "display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:20px;border:1px solid #ddd;background:#fafafa;color:#555;margin:0 6px 6px 0";
+    chip.innerHTML = h + ` <button onclick="removeHinweis(${JSON.stringify(h)})" style="border:none;background:none;cursor:pointer;color:#aaa;font-size:14px;line-height:1;padding:0">×</button>`;
+    hContainer.appendChild(chip);
+  });
+  const keys=THEMEN_MAP[selZG]||[], labels=THEMEN_LABELS[selZG]||[];
+  const customKeys=selThemen.filter(k=>!keys.includes(k));
+  const allKeys=[...keys,...customKeys], allLabels=[...labels,...customKeys];
+  const container=document.getElementById("chips");
+  container.innerHTML="";
+  allKeys.forEach((key,i) => {
+    const btn=document.createElement("button");
+    btn.className="chip"+(selThemen.includes(key)?" sel":"");
+    btn.textContent=(selThemen.includes(key)?"✓ ":"")+allLabels[i];
+    btn.addEventListener("click",()=>{
+      selThemen=selThemen.includes(key)?selThemen.filter(x=>x!==key):[...selThemen,key];
+      renderChips();
+    });
+    container.appendChild(btn);
+  });
+  document.getElementById("themen-count").textContent=`(${selThemen.length} gewählt)`;
+}
+
+function renderAll() { renderZG(); renderChips(); renderTones(); }
+
+document.getElementById("schulung-toggle").addEventListener("change", function() {
+  document.getElementById("schulung-form").style.display = this.checked ? "block" : "none";
+});
+
+let flyerBase64 = null;
+let pdfDownloadUrl = null;
+
+document.getElementById("sch-flyer").addEventListener("change", function() {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    flyerBase64 = e.target.result; // data:image/...;base64,...
+    document.getElementById("flyer-img").src = flyerBase64;
+    document.getElementById("flyer-preview").style.display = "block";
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById("flyer-remove").addEventListener("click", function() {
+  flyerBase64 = null;
+  document.getElementById("sch-flyer").value = "";
+  document.getElementById("flyer-preview").style.display = "none";
+});
+
+// PDF Upload
+document.getElementById("sch-pdf").addEventListener("change", async function() {
+  const file = this.files[0];
+  const status = document.getElementById("pdf-status");
+  if (!file) { pdfDownloadUrl = null; status.style.display="none"; return; }
+
+  status.style.display="block"; status.style.color="#888"; status.textContent="⏳ PDF wird hochgeladen...";
+
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const base64 = e.target.result.split(",")[1];
+    try {
+      const res = await fetch("/.netlify/functions/upload-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: file.name, base64 })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        pdfDownloadUrl = data.downloadUrl;
+        status.style.color="#2e7d32";
+        status.textContent=`✅ ${file.name} hochgeladen — Link wird in E-Mail eingebettet`;
+      } else {
+        status.style.color="#c62828";
+        status.textContent="Fehler beim Upload: " + (data.error || "Unbekannt");
+        pdfDownloadUrl = null;
+      }
+    } catch(e) {
+      status.style.color="#c62828";
+      status.textContent="Upload fehlgeschlagen: " + e.message;
+      pdfDownloadUrl = null;
+    }
+  };
+  reader.readAsDataURL(file);
+});
+
+function getSchulungData() {
+  if (!document.getElementById("schulung-toggle").checked) return null;
+  const titel = document.getElementById("sch-titel").value.trim();
+  if (!titel) return null;
+  return {
+    titel,
+    datum:       document.getElementById("sch-datum").value.trim(),
+    zeit:        document.getElementById("sch-zeit").value.trim(),
+    ort:         document.getElementById("sch-ort").value.trim(),
+    park:        document.getElementById("sch-park").value.trim(),
+    verpflegung: document.getElementById("sch-verpflegung").value.trim(),
+    link:        document.getElementById("sch-link").value.trim(),
+    flyer:       flyerBase64,
+    pdfUrl:      pdfDownloadUrl
+  };
+}
+
+function buildSchulungskarteHTML(s) {
+  if (!s) return "";
+  const linkUrl = s.link ? (s.link.startsWith("http") ? s.link : "https://"+s.link) : "";
+  const rows = [
+    s.datum       ? ["📅", "Datum",        s.datum]       : null,
+    s.zeit        ? ["🕗", "Uhrzeit",       s.zeit]        : null,
+    s.ort         ? ["📍", "Ort",           s.ort]         : null,
+    s.park        ? ["🅿️", "Parkplatz",    s.park]        : null,
+    s.verpflegung ? ["🍽️", "Verpflegung", s.verpflegung] : null,
+  ].filter(Boolean);
+
+  const rowsHTML = rows.map(([icon, label, val]) => `
+    <tr>
+      <td style="font-family:Arial,sans-serif;font-size:13px;color:#888;padding:5px 12px 5px 0;white-space:nowrap;vertical-align:top">${icon} <strong>${label}</strong></td>
+      <td style="font-family:Arial,sans-serif;font-size:13px;color:#333;padding:5px 0;vertical-align:top">${val}</td>
+    </tr>`).join("");
+
+  const btnHTML = (linkUrl || s.pdfUrl) ? `
+    <tr><td colspan="2" style="padding-top:14px">
+      ${linkUrl ? `<a href="${linkUrl}" style="display:inline-block;background:#CC2229;color:#fff;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;padding:10px 24px;border-radius:6px;text-decoration:none;margin-right:10px">
+        &#10132; Jetzt anmelden
+      </a>` : ''}
+      ${s.pdfUrl ? `<a href="${s.pdfUrl}" style="display:inline-block;background:#444;color:#fff;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;padding:10px 20px;border-radius:6px;text-decoration:none">
+        &#128196; Anmeldebogen (PDF)
+      </a>` : ''}
+    </td></tr>` : "";
+
+  const flyerHTML = s.flyer ? `
+    <tr><td colspan="2" style="padding-top:16px">
+      <img src="${s.flyer}" alt="Schulungsflyer" style="max-width:100%;border-radius:6px;display:block">
+    </td></tr>` : "";
+
+  return `
+<!-- SCHULUNG -->
+<tr><td style="padding-top:24px">
+  <hr style="border:none;border-top:1px solid #e8e8e8;margin:0 0 20px">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px solid #CC2229;border-radius:8px;overflow:hidden">
+    <tr><td style="background:#CC2229;padding:12px 20px">
+      <p style="font-family:Arial,sans-serif;font-size:10px;font-weight:bold;color:rgba(255,255,255,.7);margin:0 0 3px;letter-spacing:.1em;text-transform:uppercase">SCHULUNGSANKÜNDIGUNG</p>
+      <h3 style="font-family:Arial,sans-serif;font-size:17px;font-weight:bold;color:#fff;margin:0;line-height:1.3">${s.titel}</h3>
+    </td></tr>
+    <tr><td style="background:#fff;padding:16px 20px">
+      <table cellpadding="0" cellspacing="0" border="0">
+        ${rowsHTML}
+        ${btnHTML}
+        ${flyerHTML}
+      </table>
+    </td></tr>
+  </table>
+</td></tr>`;
+}
+
+function buildSchulungskartePreview(s) {
+  if (!s) return "";
+  const linkUrl = s.link ? (s.link.startsWith("http") ? s.link : "https://"+s.link) : "";
+  const rows = [
+    s.datum       ? ["📅", "Datum",        s.datum]       : null,
+    s.zeit        ? ["🕗", "Uhrzeit",       s.zeit]        : null,
+    s.ort         ? ["📍", "Ort",           s.ort]         : null,
+    s.park        ? ["🅿️", "Parkplatz",    s.park]        : null,
+    s.verpflegung ? ["🍽️", "Verpflegung", s.verpflegung] : null,
+  ].filter(Boolean).map(([icon,lbl,val])=>`<div style="font-size:13px;padding:4px 0;color:#333">${icon} <strong>${lbl}:</strong> ${val}</div>`).join("");
+  return `<div style="border:2px solid #CC2229;border-radius:8px;overflow:hidden">
+    <div style="background:#CC2229;padding:10px 16px">
+      <div style="font-size:10px;color:rgba(255,255,255,.7);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px">Schulungsankündigung</div>
+      <div style="font-size:15px;font-weight:600;color:#fff">${s.titel}</div>
+    </div>
+    <div style="padding:12px 16px;background:#fff">${rows}
+      ${linkUrl ? `<a href="${linkUrl}" style="display:inline-block;margin-top:10px;background:#CC2229;color:#fff;font-size:12px;font-weight:600;padding:7px 18px;border-radius:5px;text-decoration:none;margin-right:6px">➜ Jetzt anmelden</a>` : ""}
+      ${s.pdfUrl ? `<a href="${s.pdfUrl}" style="display:inline-block;margin-top:10px;background:#444;color:#fff;font-size:12px;font-weight:600;padding:7px 18px;border-radius:5px;text-decoration:none">📄 Anmeldebogen (PDF)</a>` : ""}
+      ${s.flyer ? `<img src="${s.flyer}" style="display:block;max-width:100%;margin-top:12px;border-radius:4px">` : ""}
+    </div>
+  </div>`;
+}
+
+document.getElementById("add-btn").addEventListener("click",()=>{
+  const inp=document.getElementById("custom-inp"), v=inp.value.trim();
+  if(v&&!selThemen.includes(v)){selThemen=[...selThemen,v];inp.value="";renderChips();}
+});
+document.getElementById("hinweis-add-btn").addEventListener("click",()=>{
+  const inp=document.getElementById("hinweis-inp"), v=inp.value.trim();
+  if(v&&!selHinweise.includes(v)){selHinweise=[...selHinweise,v];inp.value="";renderChips();}
+});
+document.getElementById("hinweis-inp").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("hinweis-add-btn").click();});
+function removeHinweis(h){selHinweise=selHinweise.filter(x=>x!==h);renderChips();}
+document.getElementById("custom-inp").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("add-btn").click();});
+document.getElementById("gen-btn").addEventListener("click",generate);
+
+async function generate() {
+  const warn=document.getElementById("warn-msg"), err=document.getElementById("err-msg");
+  if(!selZG||selThemen.length===0){warn.textContent="Bitte erst Zielgruppe und mindestens ein Thema wählen.";warn.style.display="block";return;}
+  warn.style.display="none"; err.style.display="none";
+  nlArticleImgs = {};
+  const btn=document.getElementById("gen-btn");
+  btn.innerHTML='<span class="spinner"></span>Wird generiert...'; btn.disabled=true;
+  const zgLabel=ZIELGRUPPEN.find(z=>z.id===selZG)?.label||selZG;
+  const tonLabel=TONES.find(t=>t.id===selTon)?.label||selTon;
+  const ausgabe=document.getElementById("ausgabe").value||"07/2026";
+  const keys=THEMEN_MAP[selZG]||[], lbls=THEMEN_LABELS[selZG]||[];
+  const themenLabels=selThemen.map(k=>{const i=keys.indexOf(k);return i>=0?lbls[i]:k;});
+  const hinweisePart = selHinweise.length>0
+    ? `\nEigene Mitteilung des Absenders für eine Rubrik "Mitteilung des Herausgebers": ${selHinweise.join(" | ")}. Wenn eine Website-URL enthalten ist, diese als website-Feld zurückgeben. Wenn ein Flyer erwaehnt wird, setze flyer:true.`
+    : "";
+  const promoSchema = selHinweise.length>0
+    ? `,"promo":{"title":"Einladender Titel max 60 Zeichen","content":"2-3 Saetze fliessend und werbend. Den Firmennamen hervorheben. Am Ende wenn Flyer: Hinweis auf beigefuegten Flyer. Kein HTML.","website":"URL falls angegeben sonst leer","flyer":true}`
+    : "";
+  const schulung = getSchulungData();
+  const schulungPart = schulung ? `\nSchulungsankündigung einbauen (Titel: "${schulung.titel}"${schulung.datum?", Datum: "+schulung.datum:""}${schulung.ort?", Ort: "+schulung.ort:""}). Im Artikel darauf hinweisen.` : "";
+  const prompt=`Erstelle einen professionellen deutschen Güterverkehr-Newsletter für die Zielgruppe: ${zgLabel}.
+Themen: ${themenLabels.join(", ")}. Ton: ${tonLabel}. Ausgabe: ${ausgabe}.${hinweisePart}${schulungPart}
+Antworte NUR mit einem validen JSON-Objekt ohne Markdown-Backticks:
+{"subject":"Betreffzeile max 60 Zeichen","preheader":"Vorschautext max 90 Zeichen","articles":[{"tag":"1-2 Woerter","title":"Ueberschrift max 80 Zeichen","content":"3-4 Saetze praxisnah kein HTML"},{"tag":"...","title":"...","content":"..."},{"tag":"...","title":"...","content":"..."}],"tip":{"title":"Tipp-Titel max 60 Zeichen","content":"2-3 Saetze konkreter Handlungshinweis kein HTML"}${promoSchema}}
+Genau 3 Artikel. Alles auf Deutsch.`;
+  try {
+    const res=await fetch("/.netlify/functions/newsletter-generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});
+    const data=await res.json();
+    const text=data.content?.map(i=>i.text||"").join("").trim();
+    const clean=text.replace(/```json|```/g,"").trim();
+    const parsed=JSON.parse(clean);
+    const schulung=getSchulungData();
+    resultData={...parsed, schulung, _zgLabel:zgLabel, _ausgabe:ausgabe, emailHTML:buildEmailHTML(parsed,zgLabel,ausgabe,schulung)};
+    showResult();
+  } catch(e){
+    err.textContent="Fehler: "+(e.message||"Unbekannt. Bitte nochmal versuchen.");
+    err.style.display="block";
+  }
+  btn.textContent="Neu generieren"; btn.disabled=false;
+}
+
+function regenerateNewsletterEmail() {
+  if (!resultData) return;
+  resultData.emailHTML = buildEmailHTML(resultData, resultData._zgLabel, resultData._ausgabe, resultData.schulung);
+}
+
+function showResult() {
+  const d=resultData;
+  const hdrEl = document.getElementById("out-header-img");
+  if (nlHeaderUrl) {
+    hdrEl.style.display="block";
+    hdrEl.innerHTML = `<img src="${nlHeaderUrl}" style="display:block;width:100%;border-radius:8px">`;
+  } else {
+    hdrEl.style.display="none";
+  }
+  document.getElementById("out-subject").innerHTML=`<span class="meta-lbl">Betreff:</span><strong>${d.subject}</strong>`;
+  document.getElementById("out-preheader").innerHTML=`<span class="meta-lbl">Vorschautext:</span>${d.preheader}`;
+  document.getElementById("out-articles").innerHTML=d.articles.map((a,i)=>`
+    <div class="art-item" style="${i===d.articles.length-1?"border-bottom:none;padding-bottom:0;margin-bottom:0":""}">
+      <div class="art-tag">${a.tag}</div>
+      <div class="art-h">${a.title}</div>
+      ${nlArticleImgs[i] ? `<img src="${nlArticleImgs[i]}" style="display:block;max-width:100%;border-radius:6px;margin:6px 0 8px">` : ""}
+      <p class="art-p">${a.content}</p>
+      <div style="margin-top:8px">
+        <label style="font-size:11px;color:#CC2229;cursor:pointer;display:inline-flex;align-items:center;gap:4px">
+          📷 ${nlArticleImgs[i] ? "Bild ändern" : "Bild hinzufügen"}
+          <input type="file" accept="image/jpeg,image/png,image/webp" data-artidx="${i}" style="display:none" class="nl-art-img-input">
+        </label>
+        ${nlArticleImgs[i] ? `<button data-artdel="${i}" style="font-size:11px;color:#888;background:none;border:none;cursor:pointer;margin-left:10px">entfernen</button>` : ""}
+      </div>
+    </div>`).join("");
+  // wire article image inputs
+  document.querySelectorAll(".nl-art-img-input").forEach(inp => {
+    inp.addEventListener("change", async function() {
+      const idx = this.dataset.artidx;
+      const file = this.files[0];
+      if (!file) return;
+      const url = await lgUploadImage(file);
+      if (url) {
+        nlArticleImgs[idx] = url;
+        regenerateNewsletterEmail();
+        showResult();
+      }
+    });
+  });
+  document.querySelectorAll("[data-artdel]").forEach(btn => {
+    btn.addEventListener("click", function() {
+      delete nlArticleImgs[this.dataset.artdel];
+      regenerateNewsletterEmail();
+      showResult();
+    });
+  });
+  document.getElementById("out-tip").innerHTML=`
+    <div class="tip-lbl">Tipp des Monats</div>
+    <div class="tip-h">${d.tip.title}</div>
+    <p class="tip-p">${d.tip.content}</p>`;
+
+  const promoEl = document.getElementById("out-promo");
+  if (d.promo) {
+    const url = d.promo.website ? (d.promo.website.startsWith('http') ? d.promo.website : 'https://'+d.promo.website) : '';
+    const display = d.promo.website ? d.promo.website.replace(/^https?:\/\//,'') : '';
+    promoEl.style.display="block";
+    promoEl.innerHTML=`
+      <div style="font-size:10px;font-weight:600;color:#888;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Mitteilung des Herausgebers</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:6px">${d.promo.title}</div>
+      <p style="font-size:13px;color:#555;line-height:1.65;margin:0 0 ${url?'8px':'0'}">${d.promo.content}</p>
+      ${url ? `<p style="font-size:13px;font-weight:600;margin:0">→ <a href="${url}" style="color:#CC2229;text-decoration:none">${display}</a></p>` : ''}`;
+  } else {
+    promoEl.style.display="none";
+  }
+  const schulungEl = document.getElementById("out-schulung");
+  if (d.schulung) {
+    schulungEl.style.display="block";
+    schulungEl.innerHTML = buildSchulungskartePreview(d.schulung);
+  } else {
+    schulungEl.style.display="none";
+  }
+  document.getElementById("out-code").textContent=d.emailHTML;
+  document.getElementById("result-box").style.display="block";
+  document.getElementById("versand-box").style.display="block";
+  switchTab("preview");
+  document.getElementById("result-box").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function switchTab(tab){
+  document.getElementById("tab-btn-prev").className="tab"+(tab==="preview"?" active":"");
+  document.getElementById("tab-btn-html").className="tab"+(tab==="html"?" active":"");
+  document.getElementById("tab-preview").style.display=tab==="preview"?"block":"none";
+  document.getElementById("tab-html").style.display=tab==="html"?"block":"none";
+  document.getElementById("btn-copy-subj").style.display=tab==="preview"?"flex":"none";
+  document.getElementById("btn-copy-html").style.display=tab==="html"?"flex":"none";
+}
+document.getElementById("tab-btn-prev").addEventListener("click",()=>switchTab("preview"));
+document.getElementById("tab-btn-html").addEventListener("click",()=>switchTab("html"));
+document.getElementById("btn-copy-subj").addEventListener("click",()=>{
+  if(!resultData)return;
+  navigator.clipboard.writeText(resultData.subject);
+  const l=document.getElementById("lbl-subj");l.textContent="Kopiert!";setTimeout(()=>l.textContent="Betreff",2000);
+});
+document.getElementById("btn-copy-html").addEventListener("click",()=>{
+  if(!resultData)return;
+  navigator.clipboard.writeText(resultData.emailHTML);
+  const l=document.getElementById("lbl-html");l.textContent="Kopiert!";setTimeout(()=>l.textContent="HTML für Rapidmail",2000);
+});
+
+// --- Test-Versand ---
+document.getElementById("btn-test-send").addEventListener("click", async () => {
+  if (!resultData) return;
+  const email = document.getElementById("test-email").value.trim();
+  const status = document.getElementById("test-send-status");
+  if (!email) { status.style.display="block"; status.style.color="#c62828"; status.textContent="Bitte E-Mail-Adresse eingeben."; return; }
+  const btn = document.getElementById("btn-test-send");
+  btn.textContent="Wird gesendet..."; btn.disabled=true; status.style.display="none";
+  try {
+    const res = await fetch("/.netlify/functions/send-test", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ toEmail: email, subject: resultData.subject, html: resultData.emailHTML })
+    });
+    const data = await res.json();
+    if (data.ok) { status.style.color="#2e7d32"; status.textContent="✅ Gesendet an " + email; }
+    else { status.style.color="#c62828"; status.textContent="Fehler: " + JSON.stringify(data); }
+  } catch(e) { status.style.color="#c62828"; status.textContent="Fehler: " + e.message; }
+  status.style.display="block"; btn.textContent="E-Mail senden"; btn.disabled=false;
+});
+
+// --- Listen laden ---
+document.getElementById("btn-load-lists").addEventListener("click", async () => {
+  const btn = document.getElementById("btn-load-lists");
+  const sel = document.getElementById("rapidmail-list");
+  btn.textContent="Wird geladen..."; btn.disabled=true;
+  try {
+    const res = await fetch("/.netlify/functions/get-rapidmail-lists");
+    const data = await res.json();
+    const lists = data._embedded?.recipientlists || data.recipientlists || (Array.isArray(data) ? data : []);
+    sel.innerHTML = lists.length
+      ? lists.map(l => `<option value="${l.id}">${l.name} (${l.active_count ?? l.recipients_count ?? "?"} Empfänger)</option>`).join("")
+      : '<option value="">Keine Listen gefunden</option>';
+  } catch(e) { sel.innerHTML = '<option value="">Fehler beim Laden</option>'; }
+  btn.textContent="🔄 Listen abrufen"; btn.disabled=false;
+});
+
+// --- Massen-Versand ---
+document.getElementById("btn-mass-send").addEventListener("click", async () => {
+  if (!resultData) return;
+  const listId = document.getElementById("rapidmail-list").value;
+  const status = document.getElementById("mass-send-status");
+  if (!listId) { status.style.display="block"; status.style.color="#c62828"; status.textContent="Bitte zuerst eine Liste auswählen."; return; }
+  const listName = document.getElementById("rapidmail-list").selectedOptions[0]?.text || listId;
+  if (!confirm(`Newsletter "${resultData.subject}" wirklich an "${listName}" senden?`)) return;
+  const btn = document.getElementById("btn-mass-send");
+  btn.textContent="Wird gesendet..."; btn.disabled=true; status.style.display="none";
+  try {
+    const res = await fetch("/.netlify/functions/send-rapidmail", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ listId, subject: resultData.subject, html: resultData.emailHTML })
+    });
+    const data = await res.json();
+    if (data.ok) { status.style.color="#2e7d32"; status.textContent='✅ Gesendet an "' + listName + '"!'; }
+    else { status.style.color="#c62828"; status.textContent="Fehler: " + JSON.stringify(data); }
+  } catch(e) { status.style.color="#c62828"; status.textContent="Fehler: " + e.message; }
+  status.style.display="block"; btn.textContent="An Liste senden"; btn.disabled=false;
+});
+
+renderAll();
+
+// ============ MAIN TAB SWITCHING ============
+function showMainTab(which) {
+  const tabs = {newsletter:"maintab-newsletter", lehrgang:"maintab-lehrgang", frei:"maintab-frei"};
+  const views = {newsletter:"view-newsletter", lehrgang:"view-lehrgang", frei:"view-frei"};
+  Object.keys(tabs).forEach(k => {
+    document.getElementById(tabs[k]).classList.toggle("active", k===which);
+    document.getElementById(views[k]).style.display = k===which ? "block" : "none";
+  });
+}
+document.getElementById("maintab-newsletter").addEventListener("click", () => showMainTab("newsletter"));
+document.getElementById("maintab-lehrgang").addEventListener("click", () => showMainTab("lehrgang"));
+document.getElementById("maintab-frei").addEventListener("click", () => showMainTab("frei"));
+
+// ============ LEHRGANG STATE (persisted in Netlify Blobs via localStorage-free approach) ============
+const LG_DEFAULT_KURSE = [
+  { id:"bkf1", name:"BKF Modul 1 – Risikobewusstsein und Verhalten", text:"Ihre gesetzliche Weiterbildung nach BKrFQG – wir machen es Ihnen einfach. In Modul 1 stärken Sie Ihr Risikobewusstsein und sicheres Verhalten im Straßenverkehr. Praxisnah, an einem Tag, mit allem was Sie brauchen." },
+  { id:"bkf2", name:"BKF Modul 2 – Rahmenbedingungen und Ereignisse", text:"In Modul 2 Ihrer BKF-Weiterbildung schauen wir gemeinsam auf die rechtlichen Rahmenbedingungen und den Umgang mit besonderen Ereignissen – verständlich und direkt aus der Praxis." },
+  { id:"bkf3", name:"BKF Modul 3 – Gefahrensituationen, Stress und Unfälle", text:"Modul 3 macht Sie fit für kritische Momente: Gefahrensituationen richtig einschätzen, Stress bewältigen und im Unfall souverän handeln. Ihre 7 Pflichtstunden an einem Tag." },
+  { id:"bkf4", name:"BKF Modul 4 – Firma-Fahrer-Fahrzeug", text:"In Modul 4 geht es um das Zusammenspiel von Firma, Fahrer und Fahrzeug – wirtschaftlich, rechtssicher und im Sinne aller Beteiligten." },
+  { id:"bkf5g", name:"BKF Modul 5G – Recht und Dokumente im Güterverkehr", text:"Modul 5G bringt Sie auf den aktuellen Stand bei Recht und Dokumenten im Güterverkehr – kompakt, praxisnah und rechtssicher." },
+  { id:"bkf5p", name:"BKF Modul 5P – Recht und Dokumente im Personenverkehr", text:"Modul 5P bringt Sie auf den aktuellen Stand bei Recht und Dokumenten im Personenverkehr – kompakt, praxisnah und rechtssicher." },
+  { id:"lasi", name:"Ladungssicherung", text:"Ladung richtig sichern will gelernt sein. In unserem Ladungssicherungs-Lehrgang vermitteln wir Ihnen praxisnah und rechtssicher alles Wichtige – von der Theorie bis zur Anwendung am Fahrzeug." },
+  { id:"stapler", name:"Gabelstaplerausbildung", text:"Zukunft stapeln? Aber sicher! Ihre Gabelstapler-Ausbildung bei uns ist praxisnah, zertifiziert und ein echter Karriereboost. Heute lesen – morgen durchstarten." },
+  { id:"ladekran", name:"Ladekranausbildung", text:"Sicher heben, präzise arbeiten: In unserer Ladekran-Ausbildung erlernen Sie den fachgerechten Umgang mit dem Ladekran – theoretisch fundiert und praktisch erprobt." },
+  { id:"adr", name:"ADR Gefahrgut", text:"Gefahrgut sicher transportieren: Unser ADR-Lehrgang bereitet Sie umfassend auf den Transport gefährlicher Güter vor. Basiskurs und Aufbaukurse verfügbar." },
+];
+
+let lgKurse = JSON.parse(JSON.stringify(LG_DEFAULT_KURSE));
+let lgSelKurs = "";
+let lgBildUrl = null;
+let lgParkUrl = null;
+let lgPdfUrl = null;
+let lgTermine = [];
+let lgResult = null;
+
+const LG_VERPFLEGUNG_OPTIONS = ["Frühstückssnack","Brötchen","Warmes Mittagessen","Gebäck","Obst","Süßigkeiten","Kaffee","Tee","Wasser"];
+let lgVerpflegung = [];
+
+function lgRenderVerpflegung() {
+  const c = document.getElementById("lg-verpflegung-chips");
+  if (!c) return;
+  const custom = lgVerpflegung.filter(v => !LG_VERPFLEGUNG_OPTIONS.includes(v));
+  const all = [...LG_VERPFLEGUNG_OPTIONS, ...custom];
+  c.innerHTML = "";
+  all.forEach(v => {
+    const btn = document.createElement("button");
+    btn.className = "chip" + (lgVerpflegung.includes(v) ? " sel" : "");
+    btn.textContent = (lgVerpflegung.includes(v) ? "✓ " : "") + v;
+    btn.addEventListener("click", () => {
+      lgVerpflegung = lgVerpflegung.includes(v) ? lgVerpflegung.filter(x=>x!==v) : [...lgVerpflegung, v];
+      lgRenderVerpflegung();
+    });
+    c.appendChild(btn);
+  });
+}
+
+async function lgUploadImage(file, statusEl) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      const base64 = e.target.result.split(",")[1];
+      try {
+        const res = await fetch("/.netlify/functions/upload-image", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ filename: file.name, base64, contentType: file.type })
+        });
+        const data = await res.json();
+        if (data.ok) resolve(data.url);
+        else { if(statusEl){statusEl.style.color="#c62828";statusEl.textContent="Upload-Fehler";} resolve(null); }
+      } catch(err) { if(statusEl){statusEl.style.color="#c62828";statusEl.textContent="Upload fehlgeschlagen";} resolve(null); }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Load saved Kurse from Blobs
+async function lgLoadKurse() {
+  try {
+    const res = await fetch("/.netlify/functions/kurse-load");
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.kurse && data.kurse.length) lgKurse = data.kurse;
+    }
+  } catch(e) {}
+  lgRenderKursGrid();
+}
+
+async function lgSaveKurse() {
+  try {
+    await fetch("/.netlify/functions/kurse-save", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ kurse: lgKurse })
+    });
+  } catch(e) {}
+}
+
+function lgRenderKursGrid() {
+  const grid = document.getElementById("lg-kurs-grid");
+  grid.innerHTML = "";
+  lgKurse.forEach(k => {
+    const wrap = document.createElement("div");
+    wrap.style.cssText = "position:relative";
+
+    const btn = document.createElement("button");
+    btn.className = "zg-btn" + (lgSelKurs===k.id ? " sel" : "");
+    btn.style.paddingRight = "60px";
+    btn.innerHTML = `<div class="zg-name">${k.name}</div>`;
+    btn.addEventListener("click", () => lgSelectKurs(k.id));
+    wrap.appendChild(btn);
+
+    // Edit button
+    const editBtn = document.createElement("button");
+    editBtn.innerHTML = "✏️";
+    editBtn.title = "Umbenennen";
+    editBtn.style.cssText = "position:absolute;top:50%;right:34px;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:13px;padding:4px;opacity:.6";
+    editBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const neu = prompt("Kursbezeichnung ändern:", k.name);
+      if (neu && neu.trim()) {
+        k.name = neu.trim();
+        lgSaveKurse();
+        lgRenderKursGrid();
+      }
+    });
+    wrap.appendChild(editBtn);
+
+    // Delete button
+    const delBtn = document.createElement("button");
+    delBtn.innerHTML = "🗑️";
+    delBtn.title = "Löschen";
+    delBtn.style.cssText = "position:absolute;top:50%;right:8px;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:13px;padding:4px;opacity:.6";
+    delBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (confirm(`Kurs "${k.name}" löschen?`)) {
+        lgKurse = lgKurse.filter(x => x.id !== k.id);
+        if (lgSelKurs === k.id) { lgSelKurs = ""; document.getElementById("lg-form").style.display = "none"; }
+        lgSaveKurse();
+        lgRenderKursGrid();
+      }
+    });
+    wrap.appendChild(delBtn);
+
+    grid.appendChild(wrap);
+  });
+}
+
+function lgSelectKurs(id) {
+  lgSelKurs = id;
+  const kurs = lgKurse.find(k => k.id === id);
+  document.getElementById("lg-form").style.display = "block";
+  document.getElementById("lg-text").value = kurs.text || "";
+  // Load saved image for this kurs
+  if (kurs.bildUrl) {
+    lgBildUrl = kurs.bildUrl;
+    document.getElementById("lg-bild-img").src = kurs.bildUrl;
+    document.getElementById("lg-bild-preview").style.display = "block";
+  } else {
+    lgBildUrl = null;
+    document.getElementById("lg-bild-preview").style.display = "none";
+  }
+  lgRenderKursGrid();
+  if (lgTermine.length === 0) lgAddTermin();
+}
+
+document.getElementById("lg-kurs-add").addEventListener("click", () => {
+  const inp = document.getElementById("lg-kurs-neu");
+  const name = inp.value.trim();
+  if (!name) return;
+  const id = "custom_" + Date.now();
+  lgKurse.push({ id, name, text:"" });
+  inp.value = "";
+  lgSaveKurse();
+  lgSelectKurs(id);
+});
+
+document.getElementById("lg-kurs-reset").addEventListener("click", () => {
+  if (!confirm("Kursliste auf die Standard-Kurse zurücksetzen? Deine hochgeladenen Kursbilder bleiben erhalten, eigene Kurstypen und geänderte Texte werden zurückgesetzt.")) return;
+  const savedImages = {};
+  lgKurse.forEach(k => { if (k.bildUrl) savedImages[k.id] = k.bildUrl; });
+  lgKurse = JSON.parse(JSON.stringify(LG_DEFAULT_KURSE));
+  lgKurse.forEach(k => { if (savedImages[k.id]) k.bildUrl = savedImages[k.id]; });
+  lgSelKurs = "";
+  document.getElementById("lg-form").style.display = "none";
+  lgSaveKurse();
+  lgRenderKursGrid();
+});
+
+// Kursbild upload
+document.getElementById("lg-bild").addEventListener("change", async function() {
+  const file = this.files[0];
+  if (!file) return;
+  const preview = document.getElementById("lg-bild-preview");
+  preview.style.display = "block";
+  document.getElementById("lg-bild-img").src = "";
+  const url = await lgUploadImage(file);
+  if (url) {
+    lgBildUrl = url;
+    document.getElementById("lg-bild-img").src = url;
+    const kurs = lgKurse.find(k => k.id === lgSelKurs);
+    if (kurs) { kurs.bildUrl = url; lgSaveKurse(); }
+  }
+});
+document.getElementById("lg-bild-remove").addEventListener("click", function() {
+  lgBildUrl = null;
+  document.getElementById("lg-bild").value = "";
+  document.getElementById("lg-bild-preview").style.display = "none";
+  const kurs = lgKurse.find(k => k.id === lgSelKurs);
+  if (kurs) { delete kurs.bildUrl; lgSaveKurse(); }
+});
+
+// Parkgrafik upload
+document.getElementById("lg-park").addEventListener("change", async function() {
+  const file = this.files[0];
+  if (!file) return;
+  const preview = document.getElementById("lg-park-preview");
+  preview.style.display = "block";
+  document.getElementById("lg-park-img").src = "";
+  const url = await lgUploadImage(file);
+  if (url) {
+    lgParkUrl = url;
+    document.getElementById("lg-park-img").src = url;
+  }
+});
+document.getElementById("lg-park-remove").addEventListener("click", function() {
+  lgParkUrl = null;
+  document.getElementById("lg-park").value = "";
+  document.getElementById("lg-park-preview").style.display = "none";
+});
+
+// PDF upload
+document.getElementById("lg-pdf").addEventListener("change", async function() {
+  const file = this.files[0];
+  const status = document.getElementById("lg-pdf-status");
+  if (!file) { lgPdfUrl = null; status.style.display="none"; return; }
+  status.style.display="block"; status.style.color="#888"; status.textContent="⏳ PDF wird hochgeladen...";
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const base64 = e.target.result.split(",")[1];
+    try {
+      const res = await fetch("/.netlify/functions/upload-pdf", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ filename: file.name, base64 })
+      });
+      const data = await res.json();
+      if (data.ok) { lgPdfUrl = data.downloadUrl; status.style.color="#2e7d32"; status.textContent=`✅ ${file.name} hochgeladen`; }
+      else { status.style.color="#c62828"; status.textContent="Fehler: " + (data.error||"?"); lgPdfUrl=null; }
+    } catch(e) { status.style.color="#c62828"; status.textContent="Upload fehlgeschlagen"; lgPdfUrl=null; }
+  };
+  reader.readAsDataURL(file);
+});
+
+// Termine
+function lgAddTermin() {
+  const id = "t" + Date.now();
+  lgTermine.push({ id, datum:"", von:"", bis:"" });
+  lgRenderTermine();
+}
+function lgRenderTermine() {
+  const c = document.getElementById("lg-termine");
+  c.innerHTML = "";
+  lgTermine.forEach((t, i) => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center";
+    row.innerHTML = `
+      <input class="inp" placeholder="Datum (z.B. 12.08.2026)" value="${t.datum}" data-id="${t.id}" data-f="datum" style="width:100%">
+      <input class="inp" placeholder="von" value="${t.von}" data-id="${t.id}" data-f="von" style="width:100%">
+      <input class="inp" placeholder="bis" value="${t.bis}" data-id="${t.id}" data-f="bis" style="width:100%">
+      <button data-del="${t.id}" style="background:none;border:none;color:#c62828;font-size:18px;cursor:pointer;padding:0 6px">×</button>`;
+    c.appendChild(row);
+  });
+  c.querySelectorAll("input").forEach(inp => {
+    inp.addEventListener("input", function() {
+      const t = lgTermine.find(x => x.id === this.dataset.id);
+      if (t) t[this.dataset.f] = this.value;
+    });
+  });
+  c.querySelectorAll("[data-del]").forEach(btn => {
+    btn.addEventListener("click", function() {
+      lgTermine = lgTermine.filter(x => x.id !== this.dataset.del);
+      lgRenderTermine();
+    });
+  });
+}
+document.getElementById("lg-termin-add").addEventListener("click", lgAddTermin);
+
+// Verpflegung custom add
+document.getElementById("lg-verpflegung-add").addEventListener("click", () => {
+  const inp = document.getElementById("lg-verpflegung-custom");
+  const v = inp.value.trim();
+  if (v && !lgVerpflegung.includes(v)) { lgVerpflegung = [...lgVerpflegung, v]; inp.value=""; lgRenderVerpflegung(); }
+});
+document.getElementById("lg-verpflegung-custom").addEventListener("keydown", e => {
+  if (e.key==="Enter") document.getElementById("lg-verpflegung-add").click();
+});
+lgRenderVerpflegung();
+
+// Save standard text
+document.getElementById("lg-text-save").addEventListener("click", function() {
+  const kurs = lgKurse.find(k => k.id === lgSelKurs);
+  if (kurs) {
+    kurs.text = document.getElementById("lg-text").value;
+    lgSaveKurse();
+    this.textContent = "✓ Gespeichert";
+    setTimeout(() => this.textContent = "💾 Als Standard speichern", 2000);
+  }
+});
+
+// KI reformulate
+document.getElementById("lg-ki-btn").addEventListener("click", async function() {
+  const text = document.getElementById("lg-text").value.trim();
+  const kurs = lgKurse.find(k => k.id === lgSelKurs);
+  const status = document.getElementById("lg-ki-status");
+  if (!text && !kurs) return;
+  this.disabled = true; this.textContent = "✨ Wird umformuliert...";
+  status.style.display="none";
+  const prompt = `Formuliere den folgenden Einladungstext für einen Lehrgang "${kurs?kurs.name:""}" in einem partnerschaftlichen, persönlichen Stil um — direkt, auf Augenhöhe, motivierend aber nicht aufdringlich. 2-4 Sätze. Antworte NUR mit dem umformulierten Text, ohne Anführungszeichen oder Erklärung.\n\nText: ${text || kurs.name}`;
+  try {
+    const res = await fetch("/.netlify/functions/newsletter-generate", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ prompt })
+    });
+    const data = await res.json();
+    const neu = data.content?.map(i=>i.text||"").join("").trim();
+    if (neu) document.getElementById("lg-text").value = neu;
+  } catch(e) {
+    status.style.display="block"; status.style.color="#c62828"; status.textContent="Fehler bei der Umformulierung.";
+  }
+  this.disabled = false; this.textContent = "✨ KI umformulieren (partnerschaftlich)";
+});
+
+// Build Lehrgang email HTML
+function lgBuildEmail() {
+  const kurs = lgKurse.find(k => k.id === lgSelKurs);
+  const text = document.getElementById("lg-text").value.trim();
+  const ort = document.getElementById("lg-ort").value.trim();
+  const verpflegung = lgVerpflegung.join(", ");
+  const link = document.getElementById("lg-link").value.trim();
+  const linkUrl = link ? (link.startsWith("http")?link:"https://"+link) : "";
+
+  const termineRows = lgTermine.filter(t=>t.datum).map(t => {
+    const zeit = t.von && t.bis ? `${t.von} – ${t.bis} Uhr` : (t.von ? t.von+" Uhr" : "");
+    return `<tr><td style="font-family:Arial,sans-serif;font-size:14px;color:#333;padding:4px 0"><strong>📅 ${t.datum}</strong>${zeit ? ` &nbsp;·&nbsp; 🕗 ${zeit}` : ""}</td></tr>`;
+  }).join("");
+
+  const bildHTML = lgBildUrl ? `<tr><td style="padding:0"><img src="${lgBildUrl}" alt="${kurs?kurs.name:''}" style="display:block;width:100%;border-radius:12px 12px 0 0"></td></tr>` : "";
+
+  const infoRows = [
+    ort ? `<tr><td style="font-family:Arial,sans-serif;font-size:14px;color:#333;padding:4px 0">📍 <strong>Ort:</strong> ${ort}</td></tr>` : "",
+    verpflegung ? `<tr><td style="font-family:Arial,sans-serif;font-size:14px;color:#333;padding:4px 0">🍽️ <strong>Verpflegung:</strong> ${verpflegung}</td></tr>` : "",
+  ].join("");
+
+  const btnHTML = (linkUrl || lgPdfUrl) ? `
+    ${linkUrl ? `<a href="${linkUrl}" style="display:inline-block;background:#CC2229;color:#fff;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;padding:12px 28px;border-radius:6px;text-decoration:none;margin:0 5px 8px">➜ Jetzt anmelden</a>` : ""}
+    ${lgPdfUrl ? `<a href="${lgPdfUrl}" style="display:inline-block;background:#444;color:#fff;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;padding:12px 24px;border-radius:6px;text-decoration:none;margin:0 5px 8px">📄 Anmeldebogen (PDF)</a>` : ""}
+  ` : "";
+
+  const parkHTML = lgParkUrl ? `<tr><td style="padding-top:24px">
+    <p style="font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:#888;margin:0 0 8px;letter-spacing:.08em;text-transform:uppercase">🅿️ Parkplatzsituation</p>
+    <img src="${lgParkUrl}" alt="Parkmöglichkeiten am Fahrschulteam Lingen" width="536" style="display:block;width:100%;max-width:536px;border:0;outline:none;text-decoration:none">
+  </td></tr>` : "";
+
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${kurs?kurs.name:'Lehrgang'}</title></head>
+<body style="margin:0;padding:20px 0;background:#f4f4f4;font-family:Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f4"><tr><td align="center" style="padding:20px 10px">
+<table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#fff;border-radius:12px;border:1px solid #e8e8e8">
+${bildHTML}
+<tr><td style="padding:28px 32px">
+  <h1 style="font-family:Arial,sans-serif;font-size:22px;font-weight:bold;color:#CC2229;margin:0 0 16px;line-height:1.3">${kurs?kurs.name:''}</h1>
+  <p style="font-family:Arial,sans-serif;font-size:15px;color:#333;line-height:1.7;margin:0 0 20px">${text}</p>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fafafa;border-radius:8px">
+    <tr><td style="padding:16px 20px">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%">${termineRows}${infoRows}</table>
+    </td></tr>
+  </table>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">${parkHTML}</table>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-top:24px" align="center">${btnHTML}</td></tr></table>
+</td></tr>
+<tr><td style="background:#f8f8f8;border-top:1px solid #e8e8e8;border-radius:0 0 12px 12px;padding:20px 32px">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+    <td width="90" style="vertical-align:middle;padding-right:16px">
+      <a href="https://www.fahrschulteam.info"><img src="${LOGO_SRC}" alt="Fahrschulteam" width="80" style="display:block;border:0"></a>
+    </td>
+    <td style="vertical-align:middle">
+      <p style="font-family:Arial,sans-serif;font-size:11px;color:#999;margin:0;line-height:1.8">
+        <strong style="color:#555">Fahrschulteam Lingen</strong><br>
+        Rheiner Str. 158 · 49809 Lingen (Ems)<br>
+        <a href="https://www.fahrschulteam.info" style="color:#CC2229;text-decoration:none">www.fahrschulteam.info</a><br>
+        <a href="mailto:lingen@fahrschulteam.info" style="color:#CC2229;text-decoration:none">lingen@fahrschulteam.info</a><br><br>
+        <a href="{{unsubscribe}}" style="color:#888;text-decoration:underline">Abmelden</a>
+      </p>
+    </td>
+    <td align="right" style="vertical-align:middle;padding-left:20px">
+      <a href="https://www.fahrschulteam.info"><img src="${QR_SRC}" alt="QR" width="80" height="80" style="display:block;border:0"></a>
+    </td>
+  </tr></table>
+</td></tr>
+</table></td></tr></table></body></html>`;
+}
+
+document.getElementById("lg-gen-btn").addEventListener("click", function() {
+  const kurs = lgKurse.find(k => k.id === lgSelKurs);
+  const err = document.getElementById("lg-err");
+  if (!kurs) { err.textContent="Bitte einen Lehrgang auswählen."; err.style.display="block"; return; }
+  err.style.display="none";
+  const subject = kurs.name + (lgTermine[0]?.datum ? " am " + lgTermine[0].datum : "");
+  const html = lgBuildEmail();
+  lgResult = { subject, html };
+  document.getElementById("lg-out-code").textContent = html;
+  const iframe = `<iframe style="width:100%;height:600px;border:1px solid #eee;border-radius:8px" srcdoc="${html.replace(/"/g,'&quot;')}"></iframe>`;
+  document.getElementById("lg-tab-preview").innerHTML = `<div style="margin-bottom:10px;padding:8px 14px;background:#fafafa;border-radius:8px;font-size:13px;border:1px solid #eee"><span style="color:#888">Betreff:</span> <strong>${subject}</strong></div>` + iframe;
+  document.getElementById("lg-result-box").style.display="block";
+  document.getElementById("lg-versand-box").style.display="block";
+  lgSwitchTab("preview");
+  document.getElementById("lg-result-box").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+function lgSwitchTab(tab) {
+  document.getElementById("lg-tab-prev").className = "tab" + (tab==="preview"?" active":"");
+  document.getElementById("lg-tab-html").className = "tab" + (tab==="html"?" active":"");
+  document.getElementById("lg-tab-preview").style.display = tab==="preview"?"block":"none";
+  document.getElementById("lg-tab-htmlcode").style.display = tab==="html"?"block":"none";
+  document.getElementById("lg-copy-html").style.display = tab==="html"?"flex":"none";
+}
+document.getElementById("lg-tab-prev").addEventListener("click", ()=>lgSwitchTab("preview"));
+document.getElementById("lg-tab-html").addEventListener("click", ()=>lgSwitchTab("html"));
+document.getElementById("lg-copy-html").addEventListener("click", ()=>{
+  if(!lgResult)return;
+  navigator.clipboard.writeText(lgResult.html);
+  const l=document.getElementById("lg-lbl-html"); l.textContent="Kopiert!"; setTimeout(()=>l.textContent="HTML kopieren",2000);
+});
+
+// Lehrgang Versand
+document.getElementById("lg-btn-test").addEventListener("click", async function() {
+  if (!lgResult) return;
+  const email = document.getElementById("lg-test-email").value.trim();
+  const status = document.getElementById("lg-test-status");
+  if (!email) { status.style.display="block"; status.style.color="#c62828"; status.textContent="E-Mail eingeben."; return; }
+  this.disabled=true; this.textContent="Wird gesendet..."; status.style.display="none";
+  try {
+    const res = await fetch("/.netlify/functions/send-test", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ toEmail: email, subject: lgResult.subject, html: lgResult.html })
+    });
+    const data = await res.json();
+    if (data.ok) { status.style.color="#2e7d32"; status.textContent="✅ Gesendet"; }
+    else { status.style.color="#c62828"; status.textContent="Fehler: "+JSON.stringify(data); }
+  } catch(e) { status.style.color="#c62828"; status.textContent="Fehler: "+e.message; }
+  status.style.display="block"; this.disabled=false; this.textContent="E-Mail senden";
+});
+document.getElementById("lg-btn-loadlists").addEventListener("click", async function() {
+  const sel = document.getElementById("lg-list");
+  this.disabled=true; this.textContent="Wird geladen...";
+  try {
+    const res = await fetch("/.netlify/functions/get-rapidmail-lists");
+    const data = await res.json();
+    const lists = Array.isArray(data) ? data : [];
+    sel.innerHTML = lists.length ? lists.map(l=>`<option value="${l.id}">${l.name} (${l.active_count??"?"})</option>`).join("") : '<option value="">Keine Listen</option>';
+  } catch(e) { sel.innerHTML='<option value="">Fehler</option>'; }
+  this.disabled=false; this.textContent="🔄 Listen abrufen";
+});
+document.getElementById("lg-btn-mass").addEventListener("click", async function() {
+  if (!lgResult) return;
+  const listId = document.getElementById("lg-list").value;
+  const status = document.getElementById("lg-mass-status");
+  if (!listId) { status.style.display="block"; status.style.color="#c62828"; status.textContent="Liste auswählen."; return; }
+  const listName = document.getElementById("lg-list").selectedOptions[0]?.text || listId;
+  if (!confirm(`"${lgResult.subject}" an "${listName}" senden?`)) return;
+  this.disabled=true; this.textContent="Wird gesendet..."; status.style.display="none";
+  try {
+    const res = await fetch("/.netlify/functions/send-rapidmail", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ listId, subject: lgResult.subject, html: lgResult.html })
+    });
+    const data = await res.json();
+    if (data.ok) { status.style.color="#2e7d32"; status.textContent='✅ Gesendet an "'+listName+'"!'; }
+    else { status.style.color="#c62828"; status.textContent="Fehler: "+JSON.stringify(data); }
+  } catch(e) { status.style.color="#c62828"; status.textContent="Fehler: "+e.message; }
+  status.style.display="block"; this.disabled=false; this.textContent="An Liste senden";
+});
+
+// Newsletter header image upload
+document.getElementById("nl-header-bild").addEventListener("change", async function() {
+  const file = this.files[0];
+  if (!file) return;
+  const preview = document.getElementById("nl-header-preview");
+  preview.style.display = "block";
+  document.getElementById("nl-header-img").src = "";
+  const url = await lgUploadImage(file);
+  if (url) { nlHeaderUrl = url; document.getElementById("nl-header-img").src = url; }
+});
+document.getElementById("nl-header-remove").addEventListener("click", function() {
+  nlHeaderUrl = null;
+  document.getElementById("nl-header-bild").value = "";
+  document.getElementById("nl-header-preview").style.display = "none";
+});
+
+lgLoadKurse();
+
+// ============ FREIE MITTEILUNG ============
+let frBildUrl = null;
+let frResult = null;
+let frLinks = [];
+
+function frRenderLinks() {
+  const c = document.getElementById("fr-links");
+  c.innerHTML = "";
+  frLinks.forEach(l => {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;align-items:center;gap:8px;padding:6px 10px;background:#fafafa;border:1px solid #eee;border-radius:6px;margin-bottom:6px";
+    row.innerHTML = `<span style="font-size:13px;color:#333;flex:1">🔗 <strong>${l.text}</strong> <span style="color:#aaa">→ ${l.url}</span></span>
+      <button data-del="${l.id}" style="background:none;border:none;color:#c62828;font-size:16px;cursor:pointer">×</button>`;
+    c.appendChild(row);
+  });
+  c.querySelectorAll("[data-del]").forEach(btn => {
+    btn.addEventListener("click", function() {
+      frLinks = frLinks.filter(x => x.id !== this.dataset.del);
+      frRenderLinks();
+    });
+  });
+}
+
+document.getElementById("fr-link-add").addEventListener("click", () => {
+  const text = document.getElementById("fr-link-text").value.trim();
+  const url = document.getElementById("fr-link-url").value.trim();
+  if (!text || !url) return;
+  frLinks.push({ id:"l"+Date.now(), text, url });
+  document.getElementById("fr-link-text").value = "";
+  document.getElementById("fr-link-url").value = "";
+  frRenderLinks();
+});
+document.getElementById("fr-link-url").addEventListener("keydown", e => {
+  if (e.key==="Enter") document.getElementById("fr-link-add").click();
+});
+
+document.getElementById("fr-bild").addEventListener("change", async function() {
+  const file = this.files[0];
+  if (!file) return;
+  const preview = document.getElementById("fr-bild-preview");
+  preview.style.display = "block";
+  document.getElementById("fr-bild-img").src = "";
+  const url = await lgUploadImage(file);
+  if (url) { frBildUrl = url; document.getElementById("fr-bild-img").src = url; }
+});
+document.getElementById("fr-bild-remove").addEventListener("click", function() {
+  frBildUrl = null;
+  document.getElementById("fr-bild").value = "";
+  document.getElementById("fr-bild-preview").style.display = "none";
+});
+
+// KI reformulate
+document.getElementById("fr-ki-btn").addEventListener("click", async function() {
+  const text = document.getElementById("fr-text").value.trim();
+  const titel = document.getElementById("fr-titel").value.trim();
+  const status = document.getElementById("fr-ki-status");
+  if (!text) { status.style.display="block"; status.style.color="#c62828"; status.textContent="Bitte zuerst einen Text eingeben."; return; }
+  this.disabled = true; this.textContent = "✨ Wird umformuliert...";
+  status.style.display="none";
+  const prompt = `Formuliere den folgenden Text für eine E-Mail-Mitteilung${titel?' zum Thema "'+titel+'"':''} in einem professionellen, aber partnerschaftlichen und persönlichen Stil um — direkt, auf Augenhöhe, freundlich und klar. Behalte die Kernaussage bei. Antworte NUR mit dem umformulierten Text, ohne Anführungszeichen oder Erklärung.\n\nText: ${text}`;
+  try {
+    const res = await fetch("/.netlify/functions/newsletter-generate", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ prompt })
+    });
+    const data = await res.json();
+    const neu = data.content?.map(i=>i.text||"").join("").trim();
+    if (neu) document.getElementById("fr-text").value = neu;
+  } catch(e) {
+    status.style.display="block"; status.style.color="#c62828"; status.textContent="Fehler bei der Umformulierung.";
+  }
+  this.disabled = false; this.textContent = "✨ KI umformulieren (professionell & partnerschaftlich)";
+});
+
+function frBuildEmail() {
+  const titel = document.getElementById("fr-titel").value.trim();
+  const text = document.getElementById("fr-text").value.trim();
+  const btnText = document.getElementById("fr-btn-text").value.trim();
+  const btnLink = document.getElementById("fr-btn-link").value.trim();
+  const btnUrl = btnLink ? (btnLink.startsWith("http")?btnLink:"https://"+btnLink) : "";
+
+  // Text: preserve line breaks as paragraphs
+  const textHTML = text.split(/\n\n+/).map(p =>
+    `<p style="font-family:Arial,sans-serif;font-size:15px;color:#333;line-height:1.7;margin:0 0 16px">${p.replace(/\n/g,"<br>")}</p>`
+  ).join("");
+
+  const bildHTML = frBildUrl ? `<tr><td style="padding:0"><img src="${frBildUrl}" alt="${titel}" style="display:block;width:100%;border-radius:12px 12px 0 0;border:0"></td></tr>` : "";
+
+  const btnHTML = (btnText && btnUrl) ? `<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="padding-top:12px">
+    <a href="${btnUrl}" style="display:inline-block;background:#CC2229;color:#fff;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;padding:12px 28px;border-radius:6px;text-decoration:none">${btnText}</a>
+  </td></tr></table>` : "";
+
+  const linksHTML = frLinks.length ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;background:#fafafa;border-radius:8px"><tr><td style="padding:16px 20px">
+    ${frLinks.map(l => {
+      const u = l.url.startsWith("http") ? l.url : "https://"+l.url;
+      return `<p style="font-family:Arial,sans-serif;font-size:14px;margin:0 0 8px;line-height:1.5"><a href="${u}" style="color:#CC2229;text-decoration:none;font-weight:bold">&#128279; ${l.text}</a></p>`;
+    }).join("")}
+  </td></tr></table>` : "";
+
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${titel}</title></head>
+<body style="margin:0;padding:20px 0;background:#f4f4f4;font-family:Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f4"><tr><td align="center" style="padding:20px 10px">
+<table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#fff;border-radius:12px;border:1px solid #e8e8e8">
+${bildHTML}
+<tr><td style="padding:28px 32px">
+  ${titel ? `<h1 style="font-family:Arial,sans-serif;font-size:22px;font-weight:bold;color:#CC2229;margin:0 0 16px;line-height:1.3">${titel}</h1>` : ""}
+  ${textHTML}
+  ${linksHTML}
+  ${btnHTML}
+</td></tr>
+<tr><td style="background:#f8f8f8;border-top:1px solid #e8e8e8;border-radius:0 0 12px 12px;padding:20px 32px">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+    <td width="90" style="vertical-align:middle;padding-right:16px">
+      <a href="https://www.fahrschulteam.info"><img src="${LOGO_SRC}" alt="Fahrschulteam" width="80" style="display:block;border:0"></a>
+    </td>
+    <td style="vertical-align:middle">
+      <p style="font-family:Arial,sans-serif;font-size:11px;color:#999;margin:0;line-height:1.8">
+        <strong style="color:#555">Fahrschulteam Lingen</strong><br>
+        Rheiner Str. 158 · 49809 Lingen (Ems)<br>
+        <a href="https://www.fahrschulteam.info" style="color:#CC2229;text-decoration:none">www.fahrschulteam.info</a><br>
+        <a href="mailto:lingen@fahrschulteam.info" style="color:#CC2229;text-decoration:none">lingen@fahrschulteam.info</a><br><br>
+        <a href="{{unsubscribe}}" style="color:#888;text-decoration:underline">Abmelden</a>
+      </p>
+    </td>
+    <td align="right" style="vertical-align:middle;padding-left:20px">
+      <a href="https://www.fahrschulteam.info"><img src="${QR_SRC}" alt="QR" width="80" height="80" style="display:block;border:0"></a>
+    </td>
+  </tr></table>
+</td></tr>
+</table></td></tr></table></body></html>`;
+}
+
+document.getElementById("fr-gen-btn").addEventListener("click", function() {
+  const betreff = document.getElementById("fr-betreff").value.trim();
+  const text = document.getElementById("fr-text").value.trim();
+  const err = document.getElementById("fr-err");
+  if (!betreff) { err.textContent="Bitte einen Betreff eingeben."; err.style.display="block"; return; }
+  if (!text) { err.textContent="Bitte einen Text eingeben."; err.style.display="block"; return; }
+  err.style.display="none";
+  const html = frBuildEmail();
+  frResult = { subject: betreff, html };
+  document.getElementById("fr-out-code").textContent = html;
+  const iframe = `<iframe style="width:100%;height:600px;border:1px solid #eee;border-radius:8px" srcdoc="${html.replace(/"/g,'&quot;')}"></iframe>`;
+  document.getElementById("fr-tab-preview").innerHTML = `<div style="margin-bottom:10px;padding:8px 14px;background:#fafafa;border-radius:8px;font-size:13px;border:1px solid #eee"><span style="color:#888">Betreff:</span> <strong>${betreff}</strong></div>` + iframe;
+  document.getElementById("fr-result-box").style.display="block";
+  document.getElementById("fr-versand-box").style.display="block";
+  frSwitchTab("preview");
+  document.getElementById("fr-result-box").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+function frSwitchTab(tab) {
+  document.getElementById("fr-tab-prev").className = "tab" + (tab==="preview"?" active":"");
+  document.getElementById("fr-tab-html").className = "tab" + (tab==="html"?" active":"");
+  document.getElementById("fr-tab-preview").style.display = tab==="preview"?"block":"none";
+  document.getElementById("fr-tab-htmlcode").style.display = tab==="html"?"block":"none";
+  document.getElementById("fr-copy-html").style.display = tab==="html"?"flex":"none";
+}
+document.getElementById("fr-tab-prev").addEventListener("click", ()=>frSwitchTab("preview"));
+document.getElementById("fr-tab-html").addEventListener("click", ()=>frSwitchTab("html"));
+document.getElementById("fr-copy-html").addEventListener("click", ()=>{
+  if(!frResult)return;
+  navigator.clipboard.writeText(frResult.html);
+  const l=document.getElementById("fr-lbl-html"); l.textContent="Kopiert!"; setTimeout(()=>l.textContent="HTML kopieren",2000);
+});
+
+// Freie Mitteilung Versand
+document.getElementById("fr-btn-test").addEventListener("click", async function() {
+  if (!frResult) return;
+  const email = document.getElementById("fr-test-email").value.trim();
+  const status = document.getElementById("fr-test-status");
+  if (!email) { status.style.display="block"; status.style.color="#c62828"; status.textContent="E-Mail eingeben."; return; }
+  this.disabled=true; this.textContent="Wird gesendet..."; status.style.display="none";
+  try {
+    const res = await fetch("/.netlify/functions/send-test", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ toEmail: email, subject: frResult.subject, html: frResult.html })
+    });
+    const data = await res.json();
+    if (data.ok) { status.style.color="#2e7d32"; status.textContent="✅ Gesendet an "+email; }
+    else { status.style.color="#c62828"; status.textContent="Fehler: "+JSON.stringify(data); }
+  } catch(e) { status.style.color="#c62828"; status.textContent="Fehler: "+e.message; }
+  status.style.display="block"; this.disabled=false; this.textContent="E-Mail senden";
+});
+document.getElementById("fr-btn-loadlists").addEventListener("click", async function() {
+  const sel = document.getElementById("fr-list");
+  this.disabled=true; this.textContent="Wird geladen...";
+  try {
+    const res = await fetch("/.netlify/functions/get-rapidmail-lists");
+    const data = await res.json();
+    const lists = Array.isArray(data) ? data : [];
+    sel.innerHTML = lists.length ? lists.map(l=>`<option value="${l.id}">${l.name} (${l.active_count??"?"})</option>`).join("") : '<option value="">Keine Listen</option>';
+  } catch(e) { sel.innerHTML='<option value="">Fehler</option>'; }
+  this.disabled=false; this.textContent="🔄 Listen abrufen";
+});
+document.getElementById("fr-btn-mass").addEventListener("click", async function() {
+  if (!frResult) return;
+  const listId = document.getElementById("fr-list").value;
+  const status = document.getElementById("fr-mass-status");
+  if (!listId) { status.style.display="block"; status.style.color="#c62828"; status.textContent="Liste auswählen."; return; }
+  const listName = document.getElementById("fr-list").selectedOptions[0]?.text || listId;
+  if (!confirm(`"${frResult.subject}" an "${listName}" senden?`)) return;
+  this.disabled=true; this.textContent="Wird gesendet..."; status.style.display="none";
+  try {
+    const res = await fetch("/.netlify/functions/send-rapidmail", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ listId, subject: frResult.subject, html: frResult.html })
+    });
+    const data = await res.json();
+    if (data.ok) { status.style.color="#2e7d32"; status.textContent='✅ Gesendet an "'+listName+'"!'; }
+    else { status.style.color="#c62828"; status.textContent="Fehler: "+JSON.stringify(data); }
+  } catch(e) { status.style.color="#c62828"; status.textContent="Fehler: "+e.message; }
+  status.style.display="block"; this.disabled=false; this.textContent="An Liste senden";
+});
+</script>
+</body>
+</html>

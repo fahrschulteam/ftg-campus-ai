@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  command = "npm install"
+
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "BREVO_SENDER_EMAIL"
+
+[functions]
+  node_bundler = "esbuild"

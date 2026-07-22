@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weißt du das noch? – Kostenloser Newsletter · Fahrschulteam Lingen</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+/* ── TOKENS ── */
+:root {
+  --road:   #1d3557;
+  --road-d: #152741;
+  --go:     #2a9d8f;
+  --go-d:   #1f7a70;
+  --signal: #e63946;
+  --warn:   #f4a261;
+  --paper:  #f7f5f0;
+  --ink:    #0f1923;
+  --mid:    #6b7280;
+  --line:   #e2ddd6;
+  --white:  #ffffff;
+  --r:      10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.65;
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+/* ── ROAD STRIPE HEADER ── */
+.hero {
+  background: var(--road);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero-stripe {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--warn) 0 48px, transparent 48px 96px
+  );
+  opacity: .5;
+}
+.hero-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 2.5rem;
+  text-align: center;
+  position: relative;
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--signal);
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .3rem .8rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.7rem, 5vw, 2.8rem);
+  color: #fff;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: .8rem;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--warn);
+}
+.hero-sub {
+  color: rgba(255,255,255,.72);
+  font-size: 1rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── TRUST BAR ── */
+.trust-bar {
+  background: var(--road-d);
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.trust-bar-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: .75rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.trust-item {
+  color: rgba(255,255,255,.65);
+  font-size: .78rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.trust-item span { font-size: .9rem; }
+
+/* ── MAIN CONTAINER ── */
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ── QUIZ SECTION ── */
+.section-label {
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--signal);
+  margin-bottom: .5rem;
+  text-align: center;
+}
+.quiz-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.quiz-header h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.3rem, 4vw, 1.9rem);
+  font-weight: 400;
+  color: var(--road);
+  margin-bottom: .5rem;
+}
+.quiz-header p {
+  color: var(--mid);
+  font-size: .95rem;
+}
+
+/* Progress bar */
+.progress-wrap {
+  background: var(--line);
+  border-radius: 99px;
+  height: 6px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--go), var(--road));
+  border-radius: 99px;
+  transition: width .4s ease;
+}
+
+/* Quiz card */
+.quiz-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+}
+.quiz-card-head {
+  background: var(--road);
+  color: var(--white);
+  padding: 1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.quiz-card-head .q-num {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .7;
+}
+.quiz-card-head .q-topic {
+  font-size: .75rem;
+  background: rgba(255,255,255,.15);
+  padding: .2rem .6rem;
+  border-radius: 4px;
+}
+.quiz-card-body { padding: 1.6rem 1.4rem; }
+.quiz-card-body .question {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--road);
+  margin-bottom: 1.3rem;
+  line-height: 1.4;
+}
+.answers { display: flex; flex-direction: column; gap: .6rem; }
+.answer-btn {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: .85rem 1.1rem;
+  text-align: left;
+  font-size: .93rem;
+  cursor: pointer;
+  transition: all .18s;
+  color: var(--ink);
+  font-family: inherit;
+  line-height: 1.4;
+}
+.answer-btn:hover:not(:disabled) {
+  border-color: var(--road);
+  background: #edf1f7;
+}
+.answer-btn.correct {
+  border-color: var(--go);
+  background: #e8f7f5;
+  color: var(--go-d);
+  font-weight: 600;
+}
+.answer-btn.wrong {
+  border-color: var(--signal);
+  background: #fdecea;
+  color: #b91c1c;
+}
+.answer-btn:disabled { cursor: default; }
+.feedback {
+  margin-top: 1rem;
+  padding: .8rem 1rem;
+  border-radius: 8px;
+  font-size: .87rem;
+  line-height: 1.5;
+  display: none;
+}
+.feedback.show { display: block; }
+.feedback.ok  { background: #e8f7f5; color: #1b5e55; border-left: 4px solid var(--go); }
+.feedback.err { background: #fdecea; color: #7f1d1d; border-left: 4px solid var(--signal); }
+.next-btn {
+  display: none;
+  margin-top: 1rem;
+  background: var(--road);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: .75rem 1.4rem;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .18s;
+  width: 100%;
+}
+.next-btn:hover { background: var(--road-d); }
+.next-btn.show { display: block; }
+
+/* ── RESULT CARD ── */
+.result-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  display: none;
+}
+.result-card.show { display: block; }
+.score-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+  font-family: 'DM Serif Display', serif;
+}
+.score-circle .score-num  { font-size: 2rem; line-height: 1; }
+.score-circle .score-of   { font-size: .8rem; opacity: .7; }
+.result-card h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--road);
+  margin-bottom: .5rem;
+}
+.result-card p { color: var(--mid); font-size: .93rem; margin-bottom: 1.2rem; }
+.result-cta-hint {
+  background: #fff8e6;
+  border: 1px solid #f4d5a0;
+  border-radius: 8px;
+  padding: .9rem 1.1rem;
+  font-size: .88rem;
+  color: #7c5c1e;
+  margin-bottom: 1.4rem;
+}
+.scroll-to-form {
+  background: var(--go);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: .9rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .18s;
+  width: 100%;
+}
+.scroll-to-form:hover { background: var(--go-d); }
+
+/* ── DIVIDER ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2.5rem 0;
+  color: var(--mid);
+  font-size: .8rem;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ── FORM SECTION ── */
+#anmeldung {
+  scroll-margin-top: 2rem;
+}
+.form-header {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+.form-header h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  font-weight: 400;
+  color: var(--road);
+  margin-bottom: .4rem;
+}
+.form-header p { color: var(--mid); font-size: .93rem; }
+
+.form-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 1.8rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+
+.field { margin-bottom: 1.1rem; }
+.field label {
+  display: block;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--road);
+  margin-bottom: .35rem;
+  letter-spacing: .02em;
+}
+.field label .req { color: var(--signal); margin-left: 2px; }
+.field label .opt { color: var(--mid); font-weight: 400; font-size: .75rem; margin-left: 4px; }
+.field input,
+.field select {
+  width: 100%;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: .65rem .9rem;
+  font-size: .93rem;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: inherit;
+  transition: border-color .18s, background .18s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--road);
+  background: var(--white);
+}
+.field input.error,
+.field select.error {
+  border-color: var(--signal);
+}
+.field-err {
+  font-size: .75rem;
+  color: var(--signal);
+  margin-top: .25rem;
+  display: none;
+}
+.field-err.show { display: block; }
+
+/* Checkbox group */
+.check-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .35rem;
+}
+.check-pill {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  padding: .35rem .75rem;
+  font-size: .83rem;
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.check-pill input { display: none; }
+.check-pill.checked {
+  border-color: var(--road);
+  background: #edf1f7;
+  font-weight: 500;
+  color: var(--road);
+}
+
+/* DSGVO */
+.dsgvo-box {
+  background: #f0f4fa;
+  border: 1px solid #c8d5ea;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.dsgvo-check {
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+  font-size: .84rem;
+  color: #374151;
+  cursor: pointer;
+}
+.dsgvo-check input[type=checkbox] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--road);
+  cursor: pointer;
+}
+.dsgvo-check a { color: var(--road); }
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  background: var(--go);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .18s, transform .1s;
+  margin-top: .4rem;
+  letter-spacing: .02em;
+}
+.submit-btn:hover:not(:disabled) { background: var(--go-d); }
+.submit-btn:active { transform: scale(.99); }
+.submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ── SUCCESS / ERROR STATES ── */
+.form-success {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  display: none;
+}
+.form-success.show { display: block; }
+.success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+.form-success h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--road);
+  margin-bottom: .6rem;
+}
+.form-success p { color: var(--mid); font-size: .93rem; line-height: 1.6; }
+
+.form-error-msg {
+  background: #fdecea;
+  border: 1px solid #f5c6c6;
+  border-radius: 8px;
+  padding: .8rem 1rem;
+  font-size: .85rem;
+  color: #7f1d1d;
+  margin-bottom: 1rem;
+  display: none;
+}
+.form-error-msg.show { display: block; }
+
+/* ── LOADING SPINNER ── */
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin-right: .5rem;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: .76rem;
+  color: var(--mid);
+  border-top: 1px solid var(--line);
+}
+footer a { color: var(--mid); }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Fahrschulteam Lingen · Kostenloser Newsletter</div>
+    <h1>Wie gut kennst du die<br><em>aktuellen Verkehrsregeln?</em></h1>
+    <p class="hero-sub">Mach den kurzen Test – und bleib mit unserem Newsletter immer auf dem neuesten Stand.</p>
+  </div>
+  <div class="trust-bar">
+    <div class="trust-bar-inner">
+      <div class="trust-item"><span>✅</span> 100 % kostenlos</div>
+      <div class="trust-item"><span>📬</span> Kein Spam</div>
+      <div class="trust-item"><span>🔒</span> DSGVO-konform</div>
+      <div class="trust-item"><span>↩️</span> Jederzeit abmeldbar</div>
+    </div>
+  </div>
+  <div class="hero-stripe"></div>
+</section>
+
+<!-- ══ MAIN ══════════════════════════════════════════════════ -->
+<div class="container">
+
+  <!-- Quiz Header -->
+  <div class="quiz-header">
+    <div class="section-label">Wissenstest · 3 Fragen</div>
+    <h2>Weißt du das noch?</h2>
+    <p>Viele Verkehrsregeln haben sich in den letzten Jahren geändert. Teste dein Wissen.</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <!-- Quiz Cards -->
+  <div id="quizArea">
+    <div class="quiz-card" id="quizCard"></div>
+  </div>
+
+  <!-- Result Card -->
+  <div class="result-card" id="resultCard">
+    <div class="score-circle" id="scoreCircle">
+      <div class="score-num" id="scoreNum">0</div>
+      <div class="score-of" id="scoreOf">von 3</div>
+    </div>
+    <h3 id="resultTitle"></h3>
+    <p id="resultText"></p>
+    <div class="result-cta-hint" id="resultHint"></div>
+    <button class="scroll-to-form" onclick="scrollToForm()">
+      📬 Jetzt kostenlos anmelden
+    </button>
+  </div>
+
+  <div class="divider">Anmeldung</div>
+
+  <!-- ══ FORM SECTION ═══════════════════════════════════════ -->
+  <section id="anmeldung">
+    <div class="form-header">
+      <div class="section-label">Schritt 2 · Anmeldung</div>
+      <h2>Immer informiert bleiben</h2>
+      <p>Trage dich kostenlos ein – wir halten dich auf dem Laufenden.</p>
+    </div>
+
+    <div class="form-card">
+      <div id="formWrap">
+        <div class="form-error-msg" id="formErrorMsg"></div>
+
+        <!-- Name -->
+        <div class="form-row">
+          <div class="field">
+            <label>Vorname <span class="req">*</span></label>
+            <input type="text" id="vorname" placeholder="Max" autocomplete="given-name">
+            <div class="field-err" id="err-vorname">Bitte Vornamen eingeben.</div>
+          </div>
+          <div class="field">
+            <label>Nachname <span class="req">*</span></label>
+            <input type="text" id="nachname" placeholder="Mustermann" autocomplete="family-name">
+            <div class="field-err" id="err-nachname">Bitte Nachnamen eingeben.</div>
+          </div>
+        </div>
+
+        <!-- E-Mail -->
+        <div class="field">
+          <label>E-Mail-Adresse <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="max@beispiel.de" autocomplete="email">
+          <div class="field-err" id="err-email">Bitte eine gültige E-Mail-Adresse eingeben.</div>
+        </div>
+
+        <!-- Wohnort -->
+        <div class="field">
+          <label>Wohnort <span class="req">*</span></label>
+          <input type="text" id="wohnort" placeholder="Lingen (Ems)" autocomplete="address-level2">
+          <div class="field-err" id="err-wohnort">Bitte Wohnort eingeben.</div>
+        </div>
+
+        <!-- Führerschein vorhanden + Status -->
+        <div class="form-row">
+          <div class="field">
+            <label>Führerschein vorhanden? <span class="req">*</span></label>
+            <select id="fuehrerschein_vorhanden">
+              <option value="">Bitte wählen …</option>
+              <option value="true">Ja</option>
+              <option value="false">Nein, ich mache ihn gerade</option>
+            </select>
+            <div class="field-err" id="err-fuehrerschein">Bitte auswählen.</div>
+          </div>
+          <div class="field">
+            <label>Ich bin … <span class="req">*</span></label>
+            <select id="abonnent_status">
+              <option value="">Bitte wählen …</option>
+              <option value="fahrschueler">Aktueller Fahrschüler</option>
+              <option value="ehemaliger">Ehemaliger Fahrschüler</option>
+              <option value="fahrinteressent">Allgemeiner Interessent</option>
+            </select>
+            <div class="field-err" id="err-status">Bitte auswählen.</div>
+          </div>
+        </div>
+
+        <!-- Führerscheinklassen -->
+        <div class="field">
+          <label>Führerscheinklasse <span class="opt">(optional)</span></label>
+          <div class="check-group" id="klassen">
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="B"> 🚗 B (Pkw)</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="A"> 🏍️ A (Motorrad)</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="C"> 🚛 C/CE (Lkw)</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="BE"> 🚐 BE (Anhänger)</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="AM"> 🛵 AM (Mofa)</label>
+          </div>
+        </div>
+
+        <!-- Interessen -->
+        <div class="field">
+          <label>Meine Interessen <span class="opt">(optional)</span></label>
+          <div class="check-group" id="interessen">
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="Verkehrsregeln"> 📋 Verkehrsregeln</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="Sicherheit"> 🛡️ Sicherheit</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="Bußgelder"> 💶 Bußgelder</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="Motorrad"> 🏍️ Motorrad</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="BKF"> 🚛 Berufskraftfahrer</label>
+            <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" value="Alltagstipps"> 💡 Alltagstipps</label>
+          </div>
+        </div>
+
+        <!-- Alter optional -->
+        <div class="field">
+          <label>Alter <span class="opt">(optional)</span></label>
+          <input type="number" id="alter_jahre" placeholder="z. B. 27" min="14" max="99">
+        </div>
+
+        <!-- DSGVO -->
+        <div class="dsgvo-box">
+          <label class="dsgvo-check">
+            <input type="checkbox" id="dsgvo">
+            <span>Ich stimme der Verarbeitung meiner Daten gemäß der <a href="https://fahrschulteam.info/datenschutz" target="_blank">Datenschutzerklärung</a> zu. Meine Einwilligung kann ich jederzeit widerrufen. <strong>(Pflichtfeld)</strong></span>
+          </label>
+          <div class="field-err" id="err-dsgvo" style="margin-top:.5rem">Bitte Datenschutz bestätigen.</div>
+
+          <label class="dsgvo-check" style="margin-top:.75rem">
+            <input type="checkbox" id="marketing">
+            <span>Ich möchte den kostenlosen Newsletter mit Infos zu Verkehrsregeln, Sicherheit und Neuigkeiten von Fahrschulteam Lingen erhalten. <strong>(Pflichtfeld)</strong></span>
+          </label>
+          <div class="field-err" id="err-marketing" style="margin-top:.5rem">Bitte Newsletter-Einwilligung bestätigen.</div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+          📬 Jetzt kostenlos anmelden
+        </button>
+
+        <p style="text-align:center;font-size:.76rem;color:var(--mid);margin-top:.8rem">
+          Nach der Anmeldung erhältst du eine Bestätigungs-E-Mail.<br>Kein Spam · Jederzeit abmeldbar
+        </p>
+      </div>
+
+      <!-- Success State -->
+      <div class="form-success" id="formSuccess">
+        <div class="success-icon">📬</div>
+        <h3>Fast geschafft!</h3>
+        <p>
+          Wir haben dir gerade eine Bestätigungs-E-Mail geschickt.<br>
+          Bitte klicke auf den Link in der E-Mail, um deine Anmeldung abzuschließen.<br><br>
+          <strong>Kein Spam, versprochen</strong> – manchmal landet die E-Mail im Junk-Ordner. Schau dort kurz nach.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <strong>Fahrschulteam Lingen</strong> · Rheiner Str. 158, 49809 Lingen (Ems) · 
+  <a href="https://fahrschulteam.info">fahrschulteam.info</a><br>
+  <a href="https://fahrschulteam.info/datenschutz">Datenschutz</a> · 
+  <a href="https://fahrschulteam.info/impressum">Impressum</a>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════
+   KONFIGURATION – kein Key nötig, läuft über
+   Netlify Function /.netlify/functions/subscribe-newsletter
+══════════════════════════════════════════════ */
+const SUBSCRIBE_URL  = '/.netlify/functions/subscribe-newsletter';
+const ANMELDE_QUELLE = new URLSearchParams(window.location.search).get('quelle') || 'Website';
+
+/* ══════════════════════════════════════════════
+   QUIZ DATA
+══════════════════════════════════════════════ */
+const questions = [
+  {
+    topic: 'Geschwindigkeit',
+    question: 'Seit 2021 gilt: Wer innerorts 21 km/h zu schnell fährt, muss mit einem Fahrverbot rechnen. Wie viele Monate beträgt das Mindest-Fahrverbot?',
+    answers: ['1 Monat', '2 Monate', '3 Monate', '6 Monate'],
+    correct: 0,
+    feedback: {
+      ok: '✅ Richtig! Seit der StVO-Reform 2021 gilt schon ab 21 km/h zu schnell innerorts ein Fahrverbot von mindestens 1 Monat.',
+      err: '❌ Leider nicht. Seit der Reform 2021 droht schon ab 21 km/h zu schnell innerorts ein Fahrverbot – und das bereits ab dem 1. Monat.'
+    }
+  },
+  {
+    topic: 'Abstandsregel',
+    question: 'Welche Mindestbreite muss man beim Überholen eines Radfahrers innerorts einhalten?',
+    answers: ['1 Meter', '1,5 Meter', '2 Meter', 'Es gibt keine gesetzliche Regelung'],
+    correct: 1,
+    feedback: {
+      ok: '✅ Korrekt! Seit der StVO-Reform 2020 gilt: Beim Überholen eines Radfahrers müssen innerorts mindestens 1,5 Meter Seitenabstand eingehalten werden.',
+      err: '❌ Die richtige Antwort ist 1,5 Meter. Seit 2020 ist dieser Mindestabstand zum Radfahrer innerorts gesetzlich vorgeschrieben.'
+    }
+  },
+  {
+    topic: 'Rettungsgasse',
+    question: 'Auf welchen Straßen muss eine Rettungsgasse gebildet werden?',
+    answers: ['Nur auf Autobahnen', 'Auf Autobahnen und Kraftfahrstraßen', 'Auf allen Straßen ab 3 Spuren', 'Nur wenn Blaulicht zu hören ist'],
+    correct: 1,
+    feedback: {
+      ok: '✅ Richtig! Die Rettungsgasse ist auf Autobahnen und Kraftfahrstraßen (nicht auf normalen Bundesstraßen) zu bilden – sobald der Verkehr stockt.',
+      err: '❌ Korrekt ist: Autobahnen und Kraftfahrstraßen. Auf normalen Bundesstraßen gilt die Pflicht nicht – und man muss nicht warten, bis Blaulicht zu hören ist.'
+    }
+  }
+];
+
+let current = 0;
+let score   = 0;
+let quizAnswers = [];
+let answered = false;
+
+function renderQuestion() {
+  const q   = questions[current];
+  const pct = (current / questions.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-card-head">
+      <span class="q-num">Frage ${current + 1} von ${questions.length}</span>
+      <span class="q-topic">${q.topic}</span>
+    </div>
+    <div class="quiz-card-body">
+      <div class="question">${q.question}</div>
+      <div class="answers">
+        ${q.answers.map((a, i) => `
+          <button class="answer-btn" onclick="selectAnswer(${i})" id="ans-${i}">${a}</button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        ${current < questions.length - 1 ? 'Nächste Frage →' : 'Ergebnis anzeigen →'}
+      </button>
+    </div>
+  `;
+  answered = false;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const isCorrect = idx === q.correct;
+  if (isCorrect) score++;
+  quizAnswers.push({ frage: q.question, gewaehlt: q.answers[idx], korrekt: isCorrect });
+
+  document.querySelectorAll('.answer-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('correct');
+    if (i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.textContent = isCorrect ? q.feedback.ok : q.feedback.err;
+  fb.className   = 'feedback show ' + (isCorrect ? 'ok' : 'err');
+
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function nextQuestion() {
+  current++;
+  if (current < questions.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('quizCard').style.display  = 'none';
+
+  const rc = document.getElementById('resultCard');
+  rc.classList.add('show');
+
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreOf').textContent  = `von ${questions.length}`;
+
+  const circle = document.getElementById('scoreCircle');
+  const titles = ['Noch Luft nach oben', 'Schon ganz gut!', 'Fast perfekt!', 'Verkehrsprofi! 🏆'];
+  const texts  = [
+    'Kein Problem – Verkehrsregeln ändern sich ständig. Unser Newsletter hilft dir, auf dem Laufenden zu bleiben.',
+    'Du kennst schon einiges – aber es gibt immer neue Änderungen, die du nicht verpassen solltest.',
+    'Beeindruckend! Mit unserem Newsletter bleibst du auch bei Änderungen immer vorne dabei.',
+    'Respekt! Du bist bestens informiert. Mit unserem Newsletter bleibst du es auch zukünftig.'
+  ];
+  const hints = [
+    '👇 Meld dich jetzt für unseren Newsletter an – dann erfährst du rechtzeitig alles, was auf der Straße wichtig ist.',
+    '👇 Verpasse keine Regeländerung mehr – unser kostenloser Newsletter informiert dich regelmäßig.',
+    '👇 Bleib so gut informiert wie bisher – unser Newsletter liefert dir alle Neuigkeiten direkt ins Postfach.',
+    '👇 Bleib an der Spitze – mit unserem Newsletter verpasst du keine Änderung der Straßenverkehrsordnung.'
+  ];
+  const colors = ['#e63946','#f4a261','#2a9d8f','#1d3557'];
+
+  circle.style.background = colors[score] + '18';
+  circle.style.border = `3px solid ${colors[score]}`;
+  circle.style.color  = colors[score];
+
+  document.getElementById('resultTitle').textContent = titles[score];
+  document.getElementById('resultText').textContent  = texts[score];
+  document.getElementById('resultHint').textContent  = hints[score];
+}
+
+function scrollToForm() {
+  document.getElementById('anmeldung').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════
+   PILL TOGGLE
+══════════════════════════════════════════════ */
+function togglePill(label) {
+  const cb = label.querySelector('input');
+  setTimeout(() => {
+    label.classList.toggle('checked', cb.checked);
+  }, 0);
+}
+
+function getCheckedValues(groupId) {
+  return [...document.querySelectorAll(`#${groupId} input:checked`)].map(i => i.value);
+}
+
+/* ══════════════════════════════════════════════
+   FORM VALIDATION & SUBMIT
+══════════════════════════════════════════════ */
+function showErr(id, show) {
+  const el = document.getElementById(`err-${id}`);
+  if (el) el.classList.toggle('show', show);
+  const inp = document.getElementById(id);
+  if (inp) inp.classList.toggle('error', show);
+}
+
+async function handleSubmit() {
+  // Clear errors
+  ['vorname','nachname','email','wohnort','fuehrerschein','status','dsgvo','marketing'].forEach(f => showErr(f, false));
+  document.getElementById('formErrorMsg').classList.remove('show');
+
+  const vorname   = document.getElementById('vorname').value.trim();
+  const nachname  = document.getElementById('nachname').value.trim();
+  const email     = document.getElementById('email').value.trim();
+  const wohnort   = document.getElementById('wohnort').value.trim();
+  const fsVorh    = document.getElementById('fuehrerschein_vorhanden').value;
+  const status    = document.getElementById('abonnent_status').value;
+  const alter     = document.getElementById('alter_jahre').value;
+  const dsgvo     = document.getElementById('dsgvo').checked;
+  const marketing = document.getElementById('marketing').checked;
+
+  let valid = true;
+  if (!vorname)   { showErr('vorname', true); valid = false; }
+  if (!nachname)  { showErr('nachname', true); valid = false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('email', true); valid = false; }
+  if (!wohnort)   { showErr('wohnort', true); valid = false; }
+  if (!fsVorh)    { showErr('fuehrerschein', true); valid = false; }
+  if (!status)    { showErr('status', true); valid = false; }
+  if (!dsgvo)     { showErr('dsgvo', true); valid = false; }
+  if (!marketing) { showErr('marketing', true); valid = false; }
+
+  if (!valid) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Wird angemeldet …';
+
+  const payload = {
+    vorname,
+    nachname,
+    email,
+    wohnort,
+    alter_jahre:             alter ? parseInt(alter) : null,
+    fuehrerschein_vorhanden: fsVorh === 'true',
+    abonnent_status:         status,
+    fuehrerschein_klassen:   getCheckedValues('klassen'),
+    interessen:              getCheckedValues('interessen'),
+    einwilligung_dsgvo:      true,
+    einwilligung_marketing:  true,
+    anmelde_quelle:          ANMELDE_QUELLE,
+    quiz_punkte:             score,
+    quiz_antworten:          quizAnswers,
+  };
+
+  try {
+    // Anmeldung an Netlify Function übergeben → Brevo + DOI-E-Mail
+    const res = await fetch(SUBSCRIBE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      const detail = result.error || result.detail || '';
+      if (detail.toLowerCase().includes('already') || detail.toLowerCase().includes('exist')) {
+        throw new Error('Diese E-Mail-Adresse ist bereits angemeldet.');
+      }
+      throw new Error(detail || 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
+    }
+
+    // Erfolgszustand
+    document.getElementById('formWrap').style.display    = 'none';
+    document.getElementById('formSuccess').classList.add('show');
+
+  } catch (err) {
+    console.error(err);
+    const msg = document.getElementById('formErrorMsg');
+    msg.textContent = err.message || 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
+    msg.classList.add('show');
+    btn.disabled = false;
+    btn.innerHTML = '📬 Jetzt kostenlos anmelden';
+  }
+}
+
+/* ══════════════════════════════════════════════
+   DOI-BESTÄTIGUNG (wenn ?token=… in URL)
+   Token kommt von der Netlify Function – wir
+   zeigen direkt die Bestätigungsseite, da der
+   Kontakt bereits in Brevo gespeichert ist.
+   (Brevo markiert ihn beim E-Mail-Klick intern
+   als opt-in bestätigt.)
+══════════════════════════════════════════════ */
+function checkDoiToken() {
+  const token = new URLSearchParams(window.location.search).get('token');
+  if (!token) return;
+
+  // Token vorhanden → Bestätigungsseite anzeigen
+  document.body.innerHTML = `
+    <div style="font-family:'DM Sans',sans-serif;text-align:center;padding:4rem 1.5rem;max-width:500px;margin:0 auto">
+      <div style="font-size:3.5rem;margin-bottom:1rem">🎉</div>
+      <h1 style="color:#1d3557;font-size:1.6rem;margin-bottom:.5rem">Anmeldung bestätigt!</h1>
+      <p style="color:#6b7280;line-height:1.6">
+        Willkommen beim kostenlosen Newsletter von Fahrschulteam Lingen.<br>
+        Du erhältst ab sofort regelmäßig nützliche Infos rund um Verkehrsregeln,
+        Sicherheit und Bußgelder – direkt in dein Postfach.
+      </p>
+      <a href="https://fahrschulteam.info"
+         style="display:inline-block;margin-top:1.5rem;background:#2a9d8f;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;font-weight:700">
+        Zur Fahrschule →
+      </a>
+    </div>`;
+}
+
+// Init
+renderQuestion();
+checkDoiToken();
+</script>
+</body>
+</html>
